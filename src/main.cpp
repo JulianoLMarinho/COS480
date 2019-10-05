@@ -65,9 +65,9 @@ void testSelectMultiple(DATA_STRUCT* db)
 
 void testSelectRange(DATA_STRUCT *db)
 {
-  const char *cpfBegin = "03108358286";
-  const char *cpfEnd = "08576967421";
-  const std::vector<const Record *> records = db->selRange(cpfBegin, cpfEnd);
+  const char *idBegin = "1";
+  const char *idEnd = "10";
+  const std::vector<const Record *> records = db->selRange(idBegin, idEnd);
   for (int i = 0; i < records.size(); i++)
   {
     cout << "Registro " << i << ": " << records[i][0] << endl;
@@ -77,8 +77,8 @@ void testSelectRange(DATA_STRUCT *db)
 
 void testDelete(DATA_STRUCT *db)
 {
-  const char *cpf = "48112098182";
-  db->del(cpf);
+  const char *id = "4";
+  db->del(id);
   printBlocks(db);
 }
 

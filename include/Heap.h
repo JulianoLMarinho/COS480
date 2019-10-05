@@ -19,8 +19,8 @@ public:
   void flush();
 
   void ins(const char *record);
-  const Record *sel(const char *cpf, bool toDelete=false);
-  std::vector<const Record *>selMultiple(const char **cpfs, const int quant);
-  std::vector<const Record *>selRange(const char *cpfBegin, const char *cpfEnd);
-  void del(const char *cpf);
+  const Record *sel(const char *id, bool toDelete=false);
+  std::vector<const Record *>selMultiple(const char **ids, const int quant);
+  std::vector<const Record *>selRange(const char *idBegin, const char *idEnd);
+  void del(const char *id);
 };

@@ -34,7 +34,7 @@ void Heap::ins(const char *string)
   this->header->addRecord();
 }
 
-const Record *Heap::sel(const char *cpf, bool toDelete)
+const Record *Heap::sel(const char *id, bool toDelete)
 {
   this->pos = this->blockg->read(0); // Use reading block to read the disk
   const Record *record;              // Initialize a empty record
@@ -44,16 +44,16 @@ const Record *Heap::sel(const char *cpf, bool toDelete)
     {                                // For i = 0 to i = number of reading block's records
       record = this->blockg->get(i); // Put idx record from block into record variable
       bool found = 1;                // Initialize boolean found as true
-      for (int j = 0; j < sizeof(record->cpf); j++)
+      for (int j = 0; j < sizeof(record->id); j++)
       {
-        if (record->cpf[j] != cpf[j])
-        { // Verify if record's cpf is different from query's cpf
+        if (record->id[j] != id[j])
+        { // Verify if record's id is different from query's id
           found = 0;
           break;
         }
       }
       if (found)
-      { // If found record with query's cpf return the record
+      { // If found record with query's id return the record
         if (toDelete)
         {
           // Replace the current register with 000's:
@@ -70,11 +70,11 @@ const Record *Heap::sel(const char *cpf, bool toDelete)
       }
     }
   } while ((this->pos = this->blockg->read(this->pos)) > 0); // While have records in block
-  std::cout << "No record with CPF = " << cpf << std::endl;
+  std::cout << "No record with id = " << id << std::endl;
   return nullptr;
 }
 
-std::vector<const Record *>Heap::selMultiple(const char **cpfs, const int quant)
+std::vector<const Record *>Heap::selMultiple(const char **ids, const int quant)
 {
   this->pos = this->blockg->read(0);
   const Record *record;
@@ -87,7 +87,7 @@ std::vector<const Record *>Heap::selMultiple(const char **cpfs, const int quant)
       record = this->blockg->get(i);
       for (int j = 0; j < quant; j++)
       {
-        if (record->cpfcmp(cpfs[j]))
+        if (record->idcmp(ids[j]))
         {
           foundRecords.push_back(record);
           found++;
@@ -105,7 +105,7 @@ std::vector<const Record *>Heap::selMultiple(const char **cpfs, const int quant)
   return foundRecords;
 }
 
-std::vector<const Record *>Heap::selRange(const char *cpfBegin, const char *cpfEnd)
+std::vector<const Record *>Heap::selRange(const char *idBegin, const char *idEnd)
 {
   this->pos = this->blockg->read(0);
   const Record *record;
@@ -116,9 +116,9 @@ std::vector<const Record *>Heap::selRange(const char *cpfBegin, const char *cpfE
     for (int i = 0; i < this->blockg->count(); i++)
     {
       record = this->blockg->get(i);
-      for (int j = 0; j < sizeof(record->cpf); j++)
+      for (int j = 0; j < sizeof(record->id); j++)
       {
-        if (record->cpfinrange(cpfBegin, cpfEnd))
+        if (record->idinrange(idBegin, idEnd))
         {
           foundRecords.push_back(record);
           found++;
@@ -130,8 +130,8 @@ std::vector<const Record *>Heap::selRange(const char *cpfBegin, const char *cpfE
   return foundRecords;
 }
 
-void Heap::del(const char *cpf)
+void Heap::del(const char *id)
 {
   // Seek and destroy:
-  Heap::sel(cpf, true);
+  Heap::sel(id, true);
 }

@@ -8,62 +8,57 @@ std::ostream &print(std::ostream &out, const char *str, size_t sz)
     out << str[i];
     // printf("%c", str[i]);
   }
-  out << ';';
+  out << ',';
   return out;
   // printf("\n");
 }
 
 Record::Record(const char *string)
 {
+  std::cout<<"string"<<std::endl;
+  std::cout<<string<<std::endl;
   int idx = 0;
-  // std::cout << "cpf\t";
-  memcpy(this->cpf, string, sizeof(this->cpf));
-  // print(std::cout, this->cpf, sizeof(this->cpf));
-  // std::cout << std::endl;
-  idx += sizeof(this->cpf) + 1;
-  // std::cout << "rg\t";
-  memcpy(this->rg, string + idx, sizeof(this->rg));
-  // print(std::cout, this->rg, sizeof(this->rg));
-  // std::cout << std::endl;
-  idx += sizeof(this->rg) + 1;
-  // std::cout << "email\t";
-  idx = this->csvcpy(this->email, string, idx, sizeof(this->email)) + 1;
-  // print(std::cout, this->email, sizeof(this->email));
-  // std::cout << std::endl;
-  // std::cout << "dt_nasc\t";
-  memcpy(this->dt_nasc, string + idx, sizeof(this->dt_nasc));
-  // print(std::cout, this->dt_nasc, sizeof(this->dt_nasc));
-  // std::cout << std::endl;
-  idx += sizeof(this->dt_nasc) + 1;
-  // std::cout << "sexo\t";
-  idx = this->csvcpy(this->sexo, string, idx, sizeof(this->sexo)) + 1;
-  // print(std::cout, this->sexo, sizeof(this->sexo));
-  // std::cout << std::endl;
-  // std::cout << "nome\t";
-  idx = this->csvcpy(this->nome, string, idx, sizeof(this->nome)) + 1;
-  // print(std::cout, this->nome, sizeof(this->nome));
-  // std::cout << std::endl;
-  this->salario = std::stof(string + idx);
-  // std::cout << "salario\t" << this->salario << std::endl;
+  memcpy(this->id, string, sizeof(this->id));
+  idx += sizeof(this->id) + 1;
+
+  memcpy(this->UHE, string + idx, sizeof(this->UHE));
+  idx += sizeof(this->UHE) + 1;
+  
+  memcpy(this->Cenario, string + idx, sizeof(this->Cenario));
+  idx += sizeof(this->Cenario) + 1;
+
+  //idx = this->csvcpy(this->Cenario, string, idx, sizeof(this->Cenario)) + 1;
+
+  memcpy(this->Estagio, string + idx, sizeof(this->Estagio));
+  idx += sizeof(this->Estagio) + 1;
+  std::cout<<"Antes do stof"<<std::endl;
+  std::cout<<string<<std::endl;
+  std::cout<<idx<<std::endl;
+  std::cout<<string + idx<<std::endl;
+  std::cout<<this->id<<std::endl;
+  std::cout<<this->UHE<<std::endl;
+  std::cout<<this->Cenario<<std::endl;
+
+  this->Geracao = std::stof(string + idx);
+  std::cout<<"Depois do stof"<<std::endl;
+
 }
 
 std::ostream &operator<<(std::ostream &out, const Record &r)
 {
-  print(out, r.cpf, sizeof(r.cpf));
-  print(out, r.rg, sizeof(r.rg));
-  print(out, r.email, sizeof(r.email));
-  print(out, r.dt_nasc, sizeof(r.dt_nasc));
-  print(out, r.sexo, sizeof(r.sexo));
-  print(out, r.nome, sizeof(r.nome));
-  return out << r.salario << std::endl;
+  print(out, r.id, sizeof(r.id));
+  print(out, r.UHE, sizeof(r.UHE));
+  print(out, r.Cenario, sizeof(r.Cenario));
+  print(out, r.Estagio, sizeof(r.Estagio));
+  return out << r.Geracao << std::endl;
 }
 
 bool Record::operator<(const Record &r) const
 {
   // std::cout << this->cpf << " " << r.cpf << std::endl;
-  for (int i = 0; i < sizeof(this->cpf); i++)
+  for (int i = 0; i < sizeof(this->id); i++)
   {
-    if (this->cpf[i] < r.cpf[i])
+    if (this->id[i] < r.id[i])
     {
       return true;
     }
@@ -79,7 +74,7 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
   for (; end < start + sz; end++)
   {
     // std::cout << end << "/" << src[end] << std::endl;
-    if (src[end] == ';')
+    if (src[end] == ',')
     {
       idx = end - start;
       memcpy(dst, src + start, idx);
@@ -93,7 +88,7 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
   return end;
 }
 
-bool Record::cpfcmp(const char *id) const
+bool Record::idcmp(const char *id) const
 {
   for (int j = 0; j < 11; j++)
   {
@@ -105,12 +100,12 @@ bool Record::cpfcmp(const char *id) const
   return true;
 }
 
-bool Record::cpfinrange(const char *cpfBegin, const char *cpfEnd) const
+bool Record::idinrange(const char *idBegin, const char *idEnd) const
 {
-  char cpf[12];
-  memcpy(cpf,this->cpf,11);
-  cpf[11]='\0';
-  if (strcmp(cpf,cpfBegin)>0 && strcmp(cpf,cpfEnd)<0)
+  char id[3];
+  memcpy(id,this->id,2);
+  id[2]='\0';
+  if (strcmp(id,idBegin)>0 && strcmp(id,idEnd)<0)
   {
     return true;
   }

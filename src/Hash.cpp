@@ -24,7 +24,7 @@ Hash::~Hash()
 void Hash::ins(const char *string)
 {
   const Record *record = new Record(string);
-  char cpf[11];
+  char id[11];
   memcpy(cpf,record->cpf,11);
   cpf[11]='\0';
   std::string cpfString(cpf);
