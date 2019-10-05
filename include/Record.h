@@ -9,10 +9,15 @@ class Record
 {
 private:
   size_t csvcpy(char *dst, const char *src, size_t start, size_t sz);
-
+// //UHE,Cenário,Estágio,Geração
+// this->schema.addColumn(Column("UHE",          "CHAR"));
+//     this->schema.addColumn(Column("Cenario",      "CHAR",   3));
+//     this->schema.addColumn(Column("Estagio",      "CHAR",   10));
+//     this->schema.addColumn(Column("Geracao",      "FLOAT"));
 public:
-  char cpf[11], rg[12], email[40], dt_nasc[10], sexo[10], nome[40];
-  float salario;
+  int UHE;
+  char Cenario[3], Estagio[10];
+  float Geracao;
 
   Record(const char string[]);
   bool cpfcmp(const char *cpf) const;

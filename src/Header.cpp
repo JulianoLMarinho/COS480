@@ -11,7 +11,7 @@ Header::Header(std::string headerFilename)
   this->headerFile.open(this->headerFilename, std::ios_base::in);
   if (headerFile.good()) {
     std::getline(headerFile, line);
-    std::list<std::string> columns = this->split(line, ";");
+    std::list<std::string> columns = this->split(line, ",");
     for (std::list<std::string>::iterator it = columns.begin(); it != columns.end(); it++) {
       std::list<std::string> tokens = this->split(*it, "\xff");
       std::string columnName = tokens.front();
@@ -34,13 +34,11 @@ Header::Header(std::string headerFilename)
     std::getline(headerFile, line);
     this->record_sz = std::atoi(line.c_str());
   } else {
-    this->schema.addColumn(Column("cpf",      "CHAR",   11));
-    this->schema.addColumn(Column("rg",       "CHAR",   12));
-    this->schema.addColumn(Column("email",    "CHAR",   40));
-    this->schema.addColumn(Column("dt_nasc",  "CHAR",   10));
-    this->schema.addColumn(Column("sexo",     "CHAR",   10));
-    this->schema.addColumn(Column("nome",     "CHAR",   40));
-    this->schema.addColumn(Column("salario",  "FLOAT"));
+    this->schema.addColumn(Column("id",           "INT"));
+    this->schema.addColumn(Column("UHE",          "INT"));
+    this->schema.addColumn(Column("Cenario",      "CHAR",   3));
+    this->schema.addColumn(Column("Estagio",      "CHAR",   10));
+    this->schema.addColumn(Column("Geracao",      "FLOAT"));
     this->n_r = 0;
     this->record_sz = sizeof(Record);
   }

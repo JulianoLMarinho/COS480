@@ -93,11 +93,11 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
   return end;
 }
 
-bool Record::cpfcmp(const char *cpf) const
+bool Record::cpfcmp(const char *id) const
 {
   for (int j = 0; j < 11; j++)
   {
-    if (this->cpf[j] != cpf[j])
+    if (this->id[j] != id[j])
     {
       return false;
     }

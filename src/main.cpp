@@ -19,7 +19,7 @@ void printBlocks(DATA_STRUCT* db)
 void initDb(DATA_STRUCT* db)
 {
   string line;
-  ifstream infile("data-generation/test.csv");
+  ifstream infile("Data/csvreduzido.csv");
   getline(infile, line);
   if (infile.is_open())
   {
@@ -35,27 +35,27 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("44444444444;54.037.661-5;estermoro@gmail.com;06/01/1952;Feminino;Yuri Matheus Antonia;5942.00");
+  db->ins("1,1,2017-01-01,46.0");
   db->flush();
   printBlocks(db);
 }
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *cpf = "48112098182";
-  db->sel(cpf);
+  const char *id = "1";
+  db->sel(id);
   printBlocks(db);
 }
 
 void testSelectMultiple(DATA_STRUCT* db)
 {
-  const char **cpfs = (const char **)malloc(55);
-  cpfs[0] = "48112098182";
-  cpfs[1] = "12612266402";
-  cpfs[2] = "16992486136";
-  cpfs[3] = "08576967421";
-  cpfs[4] = "03108358286";
-  const std::vector<const Record *> records = db->selMultiple(cpfs, 5);
+  const char **ids = (const char **)malloc(55);
+  ids[0] = "1";
+  ids[1] = "2";
+  ids[2] = "3";
+  ids[3] = "4";
+  ids[4] = "5";
+  const std::vector<const Record *> records = db->selMultiple(ids, 5);
   for (int i = 0; i < records.size(); i++)
   {
     cout << "Registro " << i << ": " << records[i][0] << endl;
