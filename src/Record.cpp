@@ -61,6 +61,10 @@ bool Record::operator<(const Record &r) const
   // std::cout << this->cpf << " " << r.cpf << std::endl;
   for (int i = 0; i < sizeof(this->id); i++)
   {
+    if (this->id[i] > r.id[i])
+    {
+      return false;
+    }
     if (this->id[i] < r.id[i])
     {
       return true;
