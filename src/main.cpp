@@ -90,9 +90,6 @@ void testSelectRange(DATA_STRUCT *db)
 
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
-  const char *id = "20";
-  db->delMultiUHE(id);
-  printBlocks(db);
   const char *idBegin = " 1";
   const char *idEnd = "10";
   const std::vector<const Record *> records = db->selMultipleUHE(" 1");
