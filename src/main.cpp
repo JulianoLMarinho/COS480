@@ -6,7 +6,7 @@
 #include "Sorted.h"
 #include "Hash.h"
 
-#define DATA_STRUCT Heap
+#define DATA_STRUCT Hash
 
 using namespace std;
 
@@ -48,14 +48,14 @@ void testInsertMult(DATA_STRUCT* db)
   ids[2] = "22,1 ,1  ,2017-01-01,46.05";
   ids[3] = "23,1 ,1  ,2017-01-01,46.05";
   ids[4] = "24,1 ,1  ,2017-01-01,46.05";
-  db->insMulti(ids, 5);
+  //db->insMulti(ids, 5);
   db->flush();
   printBlocks(db);
 }
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = " 4";
+  const char *id = " 1";
   db->sel(id);
   printBlocks(db);
 }
@@ -91,22 +91,22 @@ void testSelectRange(DATA_STRUCT *db)
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
   const char *id = "20";
-  db->delMultiUHE(id);
+  // db->delMultiUHE(id);
   printBlocks(db);
   const char *idBegin = " 1";
   const char *idEnd = "10";
-  const std::vector<const Record *> records = db->selMultipleUHE(" 1");
-  for (int i = 0; i < records.size(); i++)
-  {
-    cout << "Registro " << i << ": " << records[i][0] << endl;
-  }
+  //const std::vector<const Record *> records = db->selMultipleUHE(" 1");
+  // for (int i = 0; i < records.size(); i++)
+  // {
+  //   cout << "Registro " << i << ": " << records[i][0] << endl;
+  // }
   printBlocks(db);
 }
 
 void testDelMultiUHE(DATA_STRUCT *db)
 {
   const char *uhe = " 1";
-  db->delMultiUHE(uhe);
+  //db->delMultiUHE(uhe);
   printBlocks(db);
 }
 
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-  initDb(&db);
+   initDb(&db);
 
   // Insert
   // testInsert(&db);
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
   // testSelectMultiple(&db);
 
   // Select range
-  // testSelectRange(&db);
+   testSelectRange(&db);
   // testSelectMultiUHE(&db);
 
   
@@ -145,5 +145,5 @@ int main(int argc, char **argv)
   //testDelete(&db);
   //testSelect(&db);
 
-  testDelMultiUHE(&db);
+  // testDelMultiUHE(&db);
 }

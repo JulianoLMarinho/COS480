@@ -64,24 +64,31 @@ int Block::read(const uint64_t pos)
   this->reset();
   this->file.seekg(pos);
   std::string line;
+  int lastTellG = 0;
   // std::cout << "for i to " << (Block::MAX_SIZE / sizeof(Record)) << std::endl;
   for (uint32_t i = 0; i < (Block::MAX_SIZE / sizeof(Record)); i++)
   {
     // std::cout << "i = " << i << std::endl;
     // std::getline(this->file, line, '5');
     // std::cout << "line = " << line.c_str() << std::endl;
-    if (!std::getline(this->file, line) || line == ".")
+    if (!std::getline(this->file, line))
     {
       // std::cout << "error" << std::endl;
-      if (this->file.eof() || line == ".")
+      if (this->file.eof())
         return 0;
       else
         return -1;
     }
-    Record *record = new Record(line.c_str());
-    // std::cout << "record = " << *record << std::endl;
-    this->records[i] = record;
-    this->n_r++;
+    try {
+      Record *record = new Record(line.c_str());
+      // std::cout << "record = " << *record << std::endl;
+      this->records[i] = record;
+      this->n_r++;
+      lastTellG = this->file.tellg();
+    } catch (...) {
+      return lastTellG;
+    }
+    
   }
   return this->file.tellg();
 }

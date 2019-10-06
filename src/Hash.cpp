@@ -24,25 +24,25 @@ Hash::~Hash()
 void Hash::ins(const char *string)
 {
   const Record *record = new Record(string);
-  char id[11];
-  memcpy(cpf,record->cpf,11);
-  cpf[11]='\0';
-  std::string cpfString(cpf);
-  int hashPos = hashFunction(cpfString)/1000000000000000
+  char id[2];
+  memcpy(id,record->id,2);
+  id[2]='\0';
+  std::string idString(id);
+  int hashPos = hashFunction(idString)/1000000000000000;
 
   // Retrieves file:
-  std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+  std::ofstream in(HASH_DISK, std::ifstream::ate | std::ifstream::in);
   // Fill remainder of file with null:
-  while (in.tellg()+128 < hashPos){
-	  in << 0x00;
+  while (in.tellp()< hashPos){
+	  in <<  0x00;
   }
 
   // Goes to writing postiion:
-  zeroFile.seekp(hashPos);
+  in.seekp(hashPos);
   // Writes to file:
   in << *record;
 
-  std::cout<< "Inserted " << cpfString << " into position " << hashPos <<std::endl;
+  std::cout<< "Inserted " << idString << " into position " << hashPos <<std::endl;
 }
 
 void Hash::flush()
@@ -50,9 +50,9 @@ void Hash::flush()
   this->blockp->persist();
 }
 
-const Record *Hash::sel(const char *cpf, bool toDelete)
+const Record *Hash::sel(const char *id, bool toDelete)
 {
-  std::string cpfString(cpf);
+  std::string cpfString(id);
   this->pos = this->blockg->read(hashFunction(cpfString)/1000000000000000);
   std::cout<<cpfString<<std::endl<<hashFunction(cpfString)/1000000000000000<<std::endl;
   const Record *record;
@@ -60,9 +60,9 @@ const Record *Hash::sel(const char *cpf, bool toDelete)
   {
     record = this->blockg->get(i);
     bool found = 1;
-    for (int j = 0; j < sizeof(record->cpf); j++)
+    for (int j = 0; j < sizeof(record->id); j++)
     {
-      if (record->cpf[j] != cpf[j])
+      if (record->id[j] != id[j])
       {
         found = 0;
         break;
@@ -81,44 +81,42 @@ const Record *Hash::sel(const char *cpf, bool toDelete)
         std::cout << "Found";
       }
       // Finishes printing:
-      std::cout << " record " << *record << " in block position " << i << std::endl;
+      std::cout << " record " << *record << " in block position " << this->pos << std::endl;
       return record;
     }
   }
-  std::cout << "No record with CPF = " << cpf << std::endl;
+  std::cout << "No record with ID = " << id << std::endl;
   return nullptr;
 }
 
-std::vector<const Record *>Hash::selMultiple(const char **cpfs, const int quant)
+std::vector<const Record *>Hash::selMultiple(const char **ids, const int quant)
 {
   const Record *record;
   std::vector<const Record *>foundRecords;
   int found = 0;
   for (int n = 0; n < quant; n++)
   {
-    std::string cpfString(cpfs[n]);
-    this->pos = this->blockg->read(hashFunction(cpfString));
+    std::string cpfString(ids[n]);
+    this->pos = this->blockg->read(hashFunction(cpfString)/1000000000000000);
     for (int i = 0; i < this->blockg->count(); i++)
     {
       record = this->blockg->get(i);
-      if (record->cpfcmp(cpfs[n]))
+      if (record->idcmp(ids[n]))
       {
         foundRecords.push_back(record);
         found++;
         break;
       }
-      if (found == quant)
-      {
-        std::cout << "All records found " << std::endl;
-        return foundRecords;
-      }
     }
-    std::cout << "Not all records found " << std::endl;
+  }
+
+  if(found > 0){
+    std::cout << "All records found " << std::endl;
     return foundRecords;
   }
 }
 
-std::vector<const Record *>Hash::selRange(const char *cpfBegin, const char *cpfEnd)
+std::vector<const Record *>Hash::selRange(const char *idBegin, const char *idEnd)
 {
   this->pos = this->blockg->read(0);
   const Record *record;
@@ -129,9 +127,9 @@ std::vector<const Record *>Hash::selRange(const char *cpfBegin, const char *cpfE
     for (int i = 0; i < this->blockg->count(); i++)
     {
       record = this->blockg->get(i);
-      for (int j = 0; j < sizeof(record->cpf); j++)
+      for (int j = 0; j < sizeof(record->id); j++)
       {
-        if (record->cpfinrange(cpfBegin, cpfEnd))
+        if (record->idinrange(idBegin, idEnd))
         {
           foundRecords.push_back(record);
           found++;
@@ -143,8 +141,8 @@ std::vector<const Record *>Hash::selRange(const char *cpfBegin, const char *cpfE
   return foundRecords;
 }
 
-void Hash::del(const char *cpf)
+void Hash::del(const char *id)
 {
-  // Seek and destroy:
-  Hash::sel(cpf, true);
+  // Seek and destroy:oloo
+  Hash::sel(id, true);
 }
