@@ -117,7 +117,7 @@ std::vector<const Record *>Heap::selMultiple(const char **ids, const int quant)
   return foundRecords;
 }
 
-std::vector<const Record *>Heap::selMultipleUHE(const char *uhe)
+std::vector<const Record *>Heap::selMultipleUHE(const char *uhe, bool toDelete)
 {
   this->pos = this->blockg->read(0);
   const Record *record;
@@ -132,6 +132,14 @@ std::vector<const Record *>Heap::selMultipleUHE(const char *uhe)
       {
         foundRecords.push_back(record);
         found++;
+        
+        if (toDelete)
+        {
+          std::cout << " record " << *record << " in block position " << i << std::endl;
+          // Replace the current register with 000's:
+          this->blockg->nullify(i, this->pos, HEAP_DISK);
+          std::cout << "Deleted" << std::endl;
+        }
       }
     }
     if (found > 0)
@@ -177,4 +185,10 @@ void Heap::del(const char *id)
 {
   // Seek and destroy:
   Heap::sel(id, true);
+}
+
+void Heap::delMultiUHE(const char *uhe)
+{
+  // Seek and destroy:
+  Heap::selMultipleUHE(uhe, true);
 }

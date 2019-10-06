@@ -90,6 +90,9 @@ void testSelectRange(DATA_STRUCT *db)
 
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
+  const char *id = "20";
+  db->delMultiUHE(id);
+  printBlocks(db);
   const char *idBegin = " 1";
   const char *idEnd = "10";
   const std::vector<const Record *> records = db->selMultipleUHE(" 1");
@@ -97,6 +100,13 @@ void testSelectMultiUHE(DATA_STRUCT *db)
   {
     cout << "Registro " << i << ": " << records[i][0] << endl;
   }
+  printBlocks(db);
+}
+
+void testDelMultiUHE(DATA_STRUCT *db)
+{
+  const char *uhe = " 1";
+  db->delMultiUHE(uhe);
   printBlocks(db);
 }
 
@@ -113,7 +123,7 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-  // initDb(&db);
+  initDb(&db);
 
   // Insert
   // testInsert(&db);
@@ -132,6 +142,8 @@ int main(int argc, char **argv)
   
 
   // Delete
-  testDelete(&db);
-  testSelect(&db);
+  //testDelete(&db);
+  //testSelect(&db);
+
+  testDelMultiUHE(&db);
 }
