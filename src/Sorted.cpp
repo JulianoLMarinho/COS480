@@ -44,7 +44,7 @@ void Sorted::ins(const char *string)
   this->sorted = false;
 }
 
-const Record *Sorted::sel(const char *cpf, bool toDelete)
+const Record *Sorted::sel(const char *id, bool toDelete)
 {
   if (!this->sorted) {
     this->sort();
@@ -59,14 +59,14 @@ const Record *Sorted::sel(const char *cpf, bool toDelete)
     record = this->blockg->get(0); //checks if first record is larger
     bool found = 1;
     bool searchAgain = 0;
-    for (int j = 0; j < sizeof(record->cpf); j++)
+    for (int j = 0; j < sizeof(record->id); j++)
     {
-      if (record->cpf[j] != cpf[j])
+      if (record->id[j] != id[j])
       {
         found = 0;
         break;
       }
-      if (record->cpf[j] > cpf[j])
+      if (record->id[j] > id[j])
       {
         end = this->pos;
         searchAgain = 1;
@@ -97,14 +97,14 @@ const Record *Sorted::sel(const char *cpf, bool toDelete)
     record = this->blockg->get(this->blockg->count() - 1); // Checks if last record is smaller
     found = 1;
     searchAgain = 0;
-    for (int j = 0; j < sizeof(record->cpf); j++)
+    for (int j = 0; j < sizeof(record->id); j++)
     {
-      if (record->cpf[j] != cpf[j])
+      if (record->id[j] != id[j])
       {
         found = 0;
         break;
       }
-      if (record->cpf[j] < cpf[j])
+      if (record->id[j] < id[j])
       {
         start = this->pos;
         searchAgain = 1;
@@ -136,9 +136,9 @@ const Record *Sorted::sel(const char *cpf, bool toDelete)
     { //check other records
       record = this->blockg->get(i);
       found = 1;
-      for (int j = 0; j < sizeof(record->cpf); j++)
+      for (int j = 0; j < sizeof(record->id); j++)
       {
-        if (record->cpf[j] != cpf[j])
+        if (record->id[j] != id[j])
         {
           found = 0;
           break;
@@ -160,21 +160,21 @@ const Record *Sorted::sel(const char *cpf, bool toDelete)
       }
     }
   } while ((start + end) / 2 != this->pos);
-  std::cout << "No record with CPF = " << cpf << std::endl;
+  std::cout << "No record with id = " << id << std::endl;
   return nullptr;
 }
 
-std::vector<const Record *>Sorted::selMultiple(const char **cpfs, const int quant)
+std::vector<const Record *>Sorted::selMultiple(const char **ids, const int quant)
 {
   std::vector<const Record*>foundRecords;
   for (int i = 0; i < quant; i++)
   {
-    foundRecords.push_back(Sorted::sel(cpfs[i]));        
+    foundRecords.push_back(Sorted::sel(ids[i]));        
   }
   return foundRecords;
 }
 
-std::vector<const Record *>Sorted::selRange(const char *cpfBegin, const char *cpfEnd)
+std::vector<const Record *>Sorted::selRange(const char *idBegin, const char *idEnd)
 {
   this->pos = this->blockg->read(0);
   const Record *record;
@@ -186,9 +186,9 @@ std::vector<const Record *>Sorted::selRange(const char *cpfBegin, const char *cp
   //   for (int i = 0; i < this->blockg->count(); i++)
   //   {
   //     record = this->blockg->get(i);
-  //     for (int j = 0; j < sizeof(record->cpf); j++)
+  //     for (int j = 0; j < sizeof(record->id); j++)
   //     {
-  //       if (record->cpfinrange(cpfBegin, cpfEnd))
+  //       if (record->idinrange(idBegin, idEnd))
   //       {
   //         foundRecords.push_back(record);  
   //         found++;
@@ -200,10 +200,10 @@ std::vector<const Record *>Sorted::selRange(const char *cpfBegin, const char *cp
   // return foundRecords;
 }
 
-void Sorted::del(const char *cpf)
+void Sorted::del(const char *id)
 {
   // Seek and destroy:
-  Sorted::sel(cpf, true);
+  Sorted::sel(id, true);
 }
 
 void Sorted::sort() {
