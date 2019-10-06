@@ -19,7 +19,7 @@ void printBlocks(DATA_STRUCT* db)
 void initDb(DATA_STRUCT* db)
 {
   string line;
-  ifstream infile("Data/csvreduzido.csv");
+  ifstream infile("../Data/csvreduzido.csv");
   getline(infile, line);
   if (infile.is_open())
   {
@@ -35,14 +35,14 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("01,01,1,2017-01-01,46.0");
+  db->ins("1 ,1 ,1  ,2017-01-01,46.05");
   db->flush();
   printBlocks(db);
 }
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "1";
+  const char *id = "10";
   db->sel(id);
   printBlocks(db);
 }
@@ -50,11 +50,11 @@ void testSelect(DATA_STRUCT* db)
 void testSelectMultiple(DATA_STRUCT* db)
 {
   const char **ids = (const char **)malloc(55);
-  ids[0] = "1";
-  ids[1] = "2";
-  ids[2] = "3";
-  ids[3] = "4";
-  ids[4] = "5";
+  ids[0] = " 1";
+  ids[1] = " 2";
+  ids[2] = " 3";
+  ids[3] = " 4";
+  ids[4] = " 5";
   const std::vector<const Record *> records = db->selMultiple(ids, 5);
   for (int i = 0; i < records.size(); i++)
   {
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   initDb(&db);
 
   // Insert
-  testInsert(&db);
+  //testInsert(&db);
 
   // Select
   // testSelect(&db);

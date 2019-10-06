@@ -1,4 +1,7 @@
+#include <iostream>
 #include "Record.h"
+
+using namespace std;
 
 std::ostream &print(std::ostream &out, const char *str, size_t sz)
 {
@@ -14,38 +17,32 @@ std::ostream &print(std::ostream &out, const char *str, size_t sz)
 
 Record::Record(const char *string)
 {
+  // cout<<"CRIANDO UM RECORD"<<endl;
+  // cout<<"String = "<<string<<endl;
   int idx = 0;
   memcpy(this->id, string, sizeof(this->id));
-  std::cout<<"this->id"<<this->id<<std::endl;
-  
+  //this->id[sizeof(this->id)] = '\0';
   idx += sizeof(this->id) + 1;
+  // cout<<"id = "<<this->id<<endl;
 
-  std::cout<<"string + idx"<<string + idx<<std::endl;
-  std::cout<<"UHE==========="<<this->UHE<<std::endl;
   memcpy(this->UHE, string + idx, sizeof(this->UHE));
-  idx += sizeof(this->UHE) + 1;
-  std::cout<<"UHE==========="<<this->UHE<<std::endl;
-  std::cout<<"sizeof(this->UHE)"<<sizeof(this->UHE)<<std::endl;
-  
-  memcpy(this->Cenario, string + idx, sizeof(this->Cenario));
-  idx += sizeof(this->Cenario) + 1;
+  //this->UHE[sizeof(this->UHE)] = '\0';
+  idx += sizeof(this->UHE) + 1; 
+  // cout<<"UHE = "<<this->UHE<<endl;
 
-  //idx = this->csvcpy(this->Cenario, string, idx, sizeof(this->Cenario)) + 1;
+
+  memcpy(this->Cenario, string + idx, sizeof(this->Cenario));
+  //this->UHE[sizeof(this->UHE)] = '\0';
+  idx += sizeof(this->Cenario) + 1;
+  // cout<<"Cenario = "<<this->Cenario<<endl;
 
   memcpy(this->Estagio, string + idx, sizeof(this->Estagio));
+  //this->Estagio[sizeof(this->Estagio)] = '\0';
   idx += sizeof(this->Estagio) + 1;
-  std::cout<<"Antes do stof"<<std::endl;
-  std::cout<<string<<std::endl;
-  std::cout<<"sizeof(this->id)"<<sizeof(this->id)<<std::endl;
-  std::cout<<string + idx<<std::endl;
-  std::cout<<string + 1<<std::endl;
-  std::cout<<string + 5<<std::endl;
-  std::cout<<"id"<<this->id<<std::endl;
-  std::cout<<"Cenario"<<this->Cenario<<std::endl;
+  // cout<<"Estagio = "<<this->Estagio<<endl;
 
   this->Geracao = std::stof(string + idx);
-  std::cout<<"Depois do stof"<<this->Geracao<<std::endl;
-  throw std::exception();
+  // std::cout<<"Geracao = "<<this->Geracao<<std::endl;
 }
 
 std::ostream &operator<<(std::ostream &out, const Record &r)
@@ -94,7 +91,7 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
 
 bool Record::idcmp(const char *id) const
 {
-  for (int j = 0; j < 11; j++)
+  for (int j = 0; j < 2; j++)
   {
     if (this->id[j] != id[j])
     {

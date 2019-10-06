@@ -70,15 +70,16 @@ int Block::read(const uint64_t pos)
     // std::cout << "i = " << i << std::endl;
     // std::getline(this->file, line, '5');
     // std::cout << "line = " << line.c_str() << std::endl;
-    if (!std::getline(this->file, line))
+    if (!std::getline(this->file, line) || line == ".")
     {
       // std::cout << "error" << std::endl;
-      if (this->file.eof())
+      if (this->file.eof() || line == ".")
         return 0;
       else
         return -1;
     }
     Record *record = new Record(line.c_str());
+    int k = this->file.tellg();
     // std::cout << "record = " << *record << std::endl;
     this->records[i] = record;
     this->n_r++;

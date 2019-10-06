@@ -69,7 +69,9 @@ const Record *Heap::sel(const char *id, bool toDelete)
         return record;
       }
     }
-  } while ((this->pos = this->blockg->read(this->pos)) > 0); // While have records in block
+    int t = this->blockg->read(this->pos);
+      this->pos = t == -1 ? 0 : t;
+  } while ( this->pos > 0); // While have records in block
   std::cout << "No record with id = " << id << std::endl;
   return nullptr;
 }
@@ -100,7 +102,9 @@ std::vector<const Record *>Heap::selMultiple(const char **ids, const int quant)
         return foundRecords;
       }
     }
-  } while ((this->pos = this->blockg->read(this->pos)) > 0);
+    int t = this->blockg->read(this->pos);
+    this->pos = t == -1 ? 0 : t;
+  } while (this->pos > 0);
   std::cout << "Not all records found " << std::endl;
   return foundRecords;
 }
