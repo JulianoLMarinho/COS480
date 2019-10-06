@@ -19,7 +19,7 @@ void printBlocks(DATA_STRUCT* db)
 void initDb(DATA_STRUCT* db)
 {
   string line;
-  ifstream infile("../Data/csvreduzido.csv");
+  ifstream infile("../Data/gh.csv");
   getline(infile, line);
   if (infile.is_open())
   {
