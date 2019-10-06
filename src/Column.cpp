@@ -14,6 +14,6 @@ Column::~Column()
 
 std::ostream& operator<<(std::ostream &out, const Column& c)
 {
-  if (c.columnSz == -1) return out << c.columnName << '\xff' << c.columnType;
-  return out << c.columnName << '\xff' << c.columnType << '(' << c.columnSz << ')';
+  if (c.columnSz == -1) return out << c.columnName << ' ' << c.columnType;
+  return out << c.columnName << ' ' << c.columnType << '(' << c.columnSz << ')';
 }

@@ -11,9 +11,9 @@ Header::Header(std::string headerFilename)
   this->headerFile.open(this->headerFilename, std::ios_base::in);
   if (headerFile.good()) {
     std::getline(headerFile, line);
-    std::list<std::string> columns = this->split(line, ",");
+    std::list<std::string> columns = this->split(line, ";");
     for (std::list<std::string>::iterator it = columns.begin(); it != columns.end(); it++) {
-      std::list<std::string> tokens = this->split(*it, "\xff");
+      std::list<std::string> tokens = this->split(*it, " ");
       std::string columnName = tokens.front();
       tokens.pop_front();
       std::string columnTypeAndSz = tokens.front();
@@ -60,10 +60,9 @@ void Header::delRecord() {
 
 void Header::write() {
   this->headerFile.open(this->headerFilename, std::ios_base::out);
-
   this->headerFile << this->schema << std::endl;
-  this->headerFile << this->n_r << std::endl;
-  this->headerFile << this->record_sz << std::endl;
+  this->headerFile <<this->n_r << std::endl;
+  this->headerFile <<this->record_sz << std::endl;
 }
 
 std::list<std::string> Header::split(std::string s, std::string delim) {
