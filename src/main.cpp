@@ -35,7 +35,7 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("1,1,2017-01-01,46.0");
+  db->ins("01,01,1,2017-01-01,46.0");
   db->flush();
   printBlocks(db);
 }

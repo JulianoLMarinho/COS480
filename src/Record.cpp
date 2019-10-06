@@ -1,6 +1,5 @@
 #include "Record.h"
 
-
 std::ostream &print(std::ostream &out, const char *str, size_t sz)
 {
   for (size_t i = 0; i < sz; i++)
@@ -15,14 +14,18 @@ std::ostream &print(std::ostream &out, const char *str, size_t sz)
 
 Record::Record(const char *string)
 {
-  std::cout<<"string"<<std::endl;
-  std::cout<<string<<std::endl;
   int idx = 0;
   memcpy(this->id, string, sizeof(this->id));
+  std::cout<<"this->id"<<this->id<<std::endl;
+  
   idx += sizeof(this->id) + 1;
 
+  std::cout<<"string + idx"<<string + idx<<std::endl;
+  std::cout<<"UHE==========="<<this->UHE<<std::endl;
   memcpy(this->UHE, string + idx, sizeof(this->UHE));
   idx += sizeof(this->UHE) + 1;
+  std::cout<<"UHE==========="<<this->UHE<<std::endl;
+  std::cout<<"sizeof(this->UHE)"<<sizeof(this->UHE)<<std::endl;
   
   memcpy(this->Cenario, string + idx, sizeof(this->Cenario));
   idx += sizeof(this->Cenario) + 1;
@@ -33,15 +36,16 @@ Record::Record(const char *string)
   idx += sizeof(this->Estagio) + 1;
   std::cout<<"Antes do stof"<<std::endl;
   std::cout<<string<<std::endl;
-  std::cout<<idx<<std::endl;
+  std::cout<<"sizeof(this->id)"<<sizeof(this->id)<<std::endl;
   std::cout<<string + idx<<std::endl;
-  std::cout<<this->id<<std::endl;
-  std::cout<<this->UHE<<std::endl;
-  std::cout<<this->Cenario<<std::endl;
+  std::cout<<string + 1<<std::endl;
+  std::cout<<string + 5<<std::endl;
+  std::cout<<"id"<<this->id<<std::endl;
+  std::cout<<"Cenario"<<this->Cenario<<std::endl;
 
   this->Geracao = std::stof(string + idx);
-  std::cout<<"Depois do stof"<<std::endl;
-
+  std::cout<<"Depois do stof"<<this->Geracao<<std::endl;
+  throw std::exception();
 }
 
 std::ostream &operator<<(std::ostream &out, const Record &r)
