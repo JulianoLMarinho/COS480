@@ -79,7 +79,6 @@ int Block::read(const uint64_t pos)
         return -1;
     }
     Record *record = new Record(line.c_str());
-    int k = this->file.tellg();
     // std::cout << "record = " << *record << std::endl;
     this->records[i] = record;
     this->n_r++;
@@ -113,15 +112,17 @@ void Block::reset()
 // Replaces register in registers[reg] with a bunch of 000's. Then writes to file in pos +- offset:
 void Block::nullify(int reg, int pos, const char* path){
     // This is the null register that will replace the one we will delete:
-    const char allZeroChar[] = "00000000000;00.000.000-0;0000@000.com000;00/00/0000;00000;0000000;1111";
+    const char allZeroChar[] = "00,00,000,0000-00-00,11111111111111";
     Record *record = new Record(allZeroChar);
+    std::cout<<*record->Estagio<<std::endl;
     delete (this->records[reg]);  // Frees space occupied by old record
     this->records[reg] = record;  // Replaces that specific record with all 0, essentially deleting it
 
     // Custom-persist block to file. We write the whole block, which includes the modified register:
     std::fstream zeroFile;
     zeroFile.open(path);
-    zeroFile.seekp(pos - 1072);  // pos was passed to us by the Select function so we know where to write
+    std::cout<<pos<<std::endl;
+    zeroFile.seekp(pos);  // pos was passed to us by the Select function so we know where to write
     // Writes all records belonging to this block:
     for (int i = 0; i < this->count(); i++){
         zeroFile << records[i][0];

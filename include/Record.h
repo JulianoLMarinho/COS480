@@ -21,6 +21,7 @@ public:
 
   Record(const char string[]);
   bool idcmp(const char *id) const;
+  bool uhecmp(const char *uhe) const;
   bool idinrange(const char *id1, const char *id2) const;
 
   friend std::ostream &operator<<(std::ostream &out, const Record &r);

@@ -34,6 +34,13 @@ void Heap::ins(const char *string)
   this->header->addRecord();
 }
 
+void Heap::insMulti(const char **string, const int quant)
+{
+  for (int i = 0; i < quant; i++){
+    ins(string[i]);
+  }
+}
+
 const Record *Heap::sel(const char *id, bool toDelete)
 {
   this->pos = this->blockg->read(0); // Use reading block to read the disk
@@ -56,6 +63,7 @@ const Record *Heap::sel(const char *id, bool toDelete)
       { // If found record with query's id return the record
         if (toDelete)
         {
+          std::cout << " record " << *record << " in block position " << i << std::endl;
           // Replace the current register with 000's:
           this->blockg->nullify(i, this->pos, HEAP_DISK);
           std::cout << "Deleted";
@@ -109,6 +117,35 @@ std::vector<const Record *>Heap::selMultiple(const char **ids, const int quant)
   return foundRecords;
 }
 
+std::vector<const Record *>Heap::selMultipleUHE(const char *uhe)
+{
+  this->pos = this->blockg->read(0);
+  const Record *record;
+  std::vector<const Record *>foundRecords;
+  int found = 0;
+  do
+  {
+    for (int i = 0; i < this->blockg->count(); i++)
+    {
+      record = this->blockg->get(i);
+      if(record->uhecmp(uhe))
+      {
+        foundRecords.push_back(record);
+        found++;
+      }
+    }
+    if (found > 0)
+    {
+      std::cout << "All records found " << std::endl;
+      return foundRecords;
+    }
+    int t = this->blockg->read(this->pos);
+    this->pos = t == -1 ? 0 : t;
+  } while (this->pos > 0);
+  std::cout << "Not all records found " << std::endl;
+  return foundRecords;
+}
+
 std::vector<const Record *>Heap::selRange(const char *idBegin, const char *idEnd)
 {
   this->pos = this->blockg->read(0);
@@ -130,7 +167,9 @@ std::vector<const Record *>Heap::selRange(const char *idBegin, const char *idEnd
         }
       }
     }
-  } while ((this->pos = this->blockg->read(this->pos)) > 0);
+    int t = this->blockg->read(this->pos);
+    this->pos = t == -1 ? 0 : t;
+  } while (this->pos > 0);
   return foundRecords;
 }
 

@@ -101,12 +101,25 @@ bool Record::idcmp(const char *id) const
   return true;
 }
 
+bool Record::uhecmp(const char *UHE) const
+{
+  for (int j = 0; j < 2; j++)
+  {
+    if (this->UHE[j] != UHE[j])
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool Record::idinrange(const char *idBegin, const char *idEnd) const
 {
   char id[3];
   memcpy(id,this->id,2);
+
   id[2]='\0';
-  if (strcmp(id,idBegin)>0 && strcmp(id,idEnd)<0)
+  if (strcmp(id,idBegin)>=0 && strcmp(id,idEnd)<0)
   {
     return true;
   }
