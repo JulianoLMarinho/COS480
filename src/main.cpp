@@ -19,7 +19,7 @@ void printBlocks(DATA_STRUCT* db)
 void initDb(DATA_STRUCT* db)
 {
   string line;
-  ifstream infile("../Data/csvreduzido.csv");
+  ifstream infile("../Data/FixedSize_csvreduzido.csv");
   getline(infile, line);
   if (infile.is_open())
   {
@@ -35,7 +35,7 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("25,1 ,1  ,2017-01-01,46.05");
+  db->ins("0000025,001,001,2017-01-01,00000000000000046.05");
   db->flush();
   printBlocks(db);
 }
@@ -43,11 +43,11 @@ void testInsert(DATA_STRUCT* db)
 void testInsertMult(DATA_STRUCT* db)
 {
   const char **ids = (const char **)malloc(55);
-  ids[0] = "20,1 ,1  ,2017-01-01,46.05";
-  ids[1] = "21,1 ,1  ,2017-01-01,46.05";
-  ids[2] = "22,1 ,1  ,2017-01-01,46.05";
-  ids[3] = "23,1 ,1  ,2017-01-01,46.05";
-  ids[4] = "24,1 ,1  ,2017-01-01,46.05";
+  ids[0] = "0000020,001,001,2017-01-01,00000000000000046.05";
+  ids[1] = "0000021,001,001,2017-01-01,00000000000000046.05";
+  ids[2] = "0000022,001,001,2017-01-01,00000000000000046.05";
+  ids[3] = "0000023,001,001,2017-01-01,00000000000000046.05";
+  ids[4] = "0000024,001,001,2017-01-01,00000000000000046.05";
   db->insMulti(ids, 5);
   db->flush();
   printBlocks(db);
@@ -55,7 +55,7 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = " 4";
+  const char *id = "0000004";
   db->sel(id);
   printBlocks(db);
 }
@@ -63,11 +63,11 @@ void testSelect(DATA_STRUCT* db)
 void testSelectMultiple(DATA_STRUCT* db)
 {
   const char **ids = (const char **)malloc(55);
-  ids[0] = " 1";
-  ids[1] = " 2";
-  ids[2] = " 3";
-  ids[3] = " 4";
-  ids[4] = " 5";
+  ids[0] = "0000001";
+  ids[1] = "0000002";
+  ids[2] = "0000003";
+  ids[3] = "0000004";
+  ids[4] = "0000005";
   const std::vector<const Record *> records = db->selMultiple(ids, 5);
   for (int i = 0; i < records.size(); i++)
   {
@@ -78,8 +78,8 @@ void testSelectMultiple(DATA_STRUCT* db)
 
 void testSelectRange(DATA_STRUCT *db)
 {
-  const char *idBegin = " 1";
-  const char *idEnd = "10";
+  const char *idBegin = "0000001";
+  const char *idEnd = "0000010";
   const std::vector<const Record *> records = db->selRange(idBegin, idEnd);
   for (int i = 0; i < records.size(); i++)
   {
@@ -90,8 +90,6 @@ void testSelectRange(DATA_STRUCT *db)
 
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
-  const char *idBegin = " 1";
-  const char *idEnd = "10";
   const std::vector<const Record *> records = db->selMultipleUHE(" 1");
   for (int i = 0; i < records.size(); i++)
   {
@@ -102,14 +100,14 @@ void testSelectMultiUHE(DATA_STRUCT *db)
 
 void testDelMultiUHE(DATA_STRUCT *db)
 {
-  const char *uhe = " 1";
+  const char *uhe = "001";
   db->delMultiUHE(uhe);
   printBlocks(db);
 }
 
 void testDelete(DATA_STRUCT *db)
 {
-  const char *id = "20";
+  const char *id = "0000020";
   db->del(id);
   printBlocks(db);
 }
@@ -120,7 +118,7 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-  initDb(&db);
+  // initDb(&db);
 
   // Insert
   // testInsert(&db);
