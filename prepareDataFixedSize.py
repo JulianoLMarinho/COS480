@@ -12,7 +12,6 @@ f = open(filePath+filename, "r+")
 new_file = []
 # Loop the file line by line
 i = 0
-maxCenario = 0
 for line in f:
   # add
   if(i==0):
@@ -26,10 +25,8 @@ for line in f:
         +line[2].zfill(ESTAGIO_SIZE)+','    # Estagio
         +line[3].zfill(GERACAO_SIZE)        # Geracao
     )
-    maxCenario = max([maxCenario, len(line[1])])
   i+=1
 
-print(maxCenario)
 # Open the file as Write, loop the new array and write with a newline
 with open(filePath + fixedFilePrefix + filename, "w+") as f:
   for i in new_file:
