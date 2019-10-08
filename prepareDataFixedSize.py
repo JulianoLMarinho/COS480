@@ -19,12 +19,13 @@ for line in f:
   else:
     line = line.split(',')
     new_file.append(
-        str(i).zfill(ID_SIZE)+',' # id
-        +line[0].zfill(UHE_SIZE)+','     # UHE
-        +line[1].zfill(CENARIO_SIZE)+','     # Cenario
-        +line[2].zfill(ESTAGIO_SIZE)+','    # Estagio
-        +line[3].zfill(GERACAO_SIZE)        # Geracao
+      str(i).zfill(ID_SIZE)+',' # id
+      +line[0].zfill(UHE_SIZE)+','     # UHE
+      +line[1].zfill(CENARIO_SIZE)+','     # Cenario
+      +line[2].zfill(ESTAGIO_SIZE)+','    # Estagio
+      +line[3].replace('\n', '').zfill(GERACAO_SIZE)+'\n'        # Geracao
     )
+
   i+=1
 
 # Open the file as Write, loop the new array and write with a newline
