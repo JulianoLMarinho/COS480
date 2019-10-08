@@ -1,7 +1,9 @@
-filename = "Data/gh.csv"
+filePath = 'Data/'
+filename = "gh.csv"
+variableFilePrefix = "VariableSize_"
 ID_SIZE = 7
 # Open the file as read
-f = open(filename, "r+")
+f = open(filePath+filename, "r+")
 # Create an array to hold write data
 new_file = []
 # Loop the file line by line
@@ -16,6 +18,6 @@ for line in f:
   i+=1
 
 # Open the file as Write, loop the new array and write with a newline
-with open(filename, "w+") as f:
+with open(filePath+variableFilePrefix+filename, "w+") as f:
   for i in new_file:
     f.write(i)
