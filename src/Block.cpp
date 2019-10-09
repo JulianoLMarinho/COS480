@@ -13,7 +13,7 @@ Block::Block(const char *filename, const char mode)
     std::fstream file;
     file.open(filename); // Open file in out mode
     for(int i = 0; i<12800000; i++){
-      file.put(0x00);
+      file.put(' ');
     }
   }
   else

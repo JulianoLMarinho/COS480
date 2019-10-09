@@ -10,7 +10,7 @@
 Hash::Hash()
 {
   const std::string dataFilename = HASH_DISK;
-  const std::string headerFilename = HASH_DISK"h";
+  const std::string headerFilename = HASH_DISK "h";
   this->blockp = new Block(dataFilename.c_str(), 'o'); // Initialize writing block
   this->blockg = new Block(dataFilename.c_str(), 'r'); // Initialize reading block
   this->header = new Header(headerFilename);
@@ -30,26 +30,35 @@ void Hash::ins(const char *string)
   id[7]='\0';
   std::string idString(id);
   int idInt = std::stoi(idString);
-  int hashPos = idInt % 78125; //tamanho de record = 28
+  int hashPos = idInt % 10; //tamanho de record = 43
   // Retrieves file:
-  std::fstream in(HASH_DISK, std::ifstream::ate | std::ifstream::in);
+  std::fstream in(HASH_DISK, std::fstream::ate | std::fstream::in | std::fstream::out);
   // Fill remainder of file with null:
-  while (in.tellg()< hashPos + 28*64*hashPos){
-	  in <<  0x00;
+  int pos = hashPos + 1024*2*hashPos;
+  while (in.tellg()< pos){
+	  in <<  ' ';
   }
   
-  // Goes to writing postiion:
-  // char *s = new char[1000];
-  // in.read(s, 1000);
-  // cout<<s<<endl;
-  // delete [] s;
-  // Writes to file:
-  in.seekg(hashPos + 28*64*hashPos);
 
+
+
+  // Goes to writing postiion:
+  in.seekg(pos);
   in << std::endl;
+  char * headerBucket = new char [10];
+  in.read(headerBucket, 10);
+  HeaderBucket *h = new HeaderBucket(headerBucket, pos + 1);
+
+  
+  in.seekg(h->getNextEmptyPosition(sizeof(Record)));
   in << *record;
-  //in.close();
-  std::cout<< "Inserted " << idInt << " into position " << hashPos + 28*hashPos <<std::endl;
+  in.seekg(pos);
+  in << std::endl;
+  in << *h;
+  std::cout<<h->getNextEmptyPosition()<<std::endl;
+
+  delete [] headerBucket;
+
 }
 
 void Hash::flush()

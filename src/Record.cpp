@@ -3,14 +3,15 @@
 
 using namespace std;
 
-std::ostream &print(std::ostream &out, const char *str, size_t sz)
+std::ostream &print(std::ostream &out, const char *str, size_t sz, bool comma = true)
 {
   for (size_t i = 0; i < sz; i++)
   {
     out << str[i];
     // printf("%c", str[i]);
   }
-  out << ',';
+  if(comma)
+    out << ',';
   return out;
   // printf("\n");
 }
@@ -41,7 +42,7 @@ Record::Record(const char *string)
   idx += sizeof(this->Estagio) + 1;
   // cout<<"Estagio = "<<this->Estagio<<endl;
 
-  this->Geracao = std::stof(string + idx);
+  memcpy(this->Geracao, string + idx, sizeof(this->Geracao));
   // std::cout<<"Geracao = "<<this->Geracao<<std::endl;
 }
 
@@ -51,7 +52,8 @@ std::ostream &operator<<(std::ostream &out, const Record &r)
   print(out, r.UHE, sizeof(r.UHE));
   print(out, r.Cenario, sizeof(r.Cenario));
   print(out, r.Estagio, sizeof(r.Estagio));
-  return out << r.Geracao << std::endl;
+  print(out, r.Geracao, sizeof(r.Geracao), false);
+  return out<< std::endl; //pra hashtablefuncionar eu vou mudar isso pra não ter esse endl
 }
 
 bool Record::operator<(const Record &r) const
@@ -91,7 +93,7 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
 
 bool Record::idcmp(const char *id) const
 {
-  for (int j = 0; j <7; j++)
+  for (int j = 0; j < sizeof(this->id); j++)
   {
     if (this->id[j] != id[j])
     {
@@ -103,7 +105,7 @@ bool Record::idcmp(const char *id) const
 
 bool Record::uhecmp(const char *UHE) const
 {
-  for (int j = 0; j < 7; j++)
+  for (int j = 0; j < sizeof(this->UHE); j++)
   {
     if (this->UHE[j] != UHE[j])
     {
@@ -115,10 +117,9 @@ bool Record::uhecmp(const char *UHE) const
 
 bool Record::idinrange(const char *idBegin, const char *idEnd) const
 {
-  char id[8];
-  memcpy(id,this->id,7);
+  char id[sizeof(this->id)];
+  memcpy(id,this->id,sizeof(this->id));
 
-  id[2]='\0';
   if (strcmp(id,idBegin)>=0 && strcmp(id,idEnd)<0)
   {
     return true;

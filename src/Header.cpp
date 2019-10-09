@@ -34,11 +34,11 @@ Header::Header(std::string headerFilename)
     std::getline(headerFile, line);
     this->record_sz = std::atoi(line.c_str());
   } else {
-    this->schema.addColumn(Column("id",           "CHAR", 2));
-    this->schema.addColumn(Column("UHE",          "CHAR", 2));
+    this->schema.addColumn(Column("id",           "CHAR", 7));
+    this->schema.addColumn(Column("UHE",          "CHAR", 3));
     this->schema.addColumn(Column("Cenario",      "CHAR",   3));
     this->schema.addColumn(Column("Estagio",      "CHAR",   10));
-    this->schema.addColumn(Column("Geracao",      "FLOAT"));
+    this->schema.addColumn(Column("Geracao",      "CHAR",   20));
     this->n_r = 0;
     this->record_sz = sizeof(Record);
   }
