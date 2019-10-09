@@ -15,7 +15,7 @@ private:
 //     this->schema.addColumn(Column("Estagio",      "CHAR",   10));
 //     this->schema.addColumn(Column("Geracao",      "FLOAT"));
 public:
-  char UHE[2], id[2]; //ALTERAR DE ACORDO COM O TAMANHO  DO ID NO
+  char UHE[3], id[7]; //ALTERAR DE ACORDO COM O TAMANHO  DO ID NO
   char Cenario[3], Estagio[10];
   float Geracao;
 

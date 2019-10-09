@@ -91,7 +91,7 @@ size_t Record::csvcpy(char *dst, const char *src, size_t start, size_t sz)
 
 bool Record::idcmp(const char *id) const
 {
-  for (int j = 0; j < 2; j++)
+  for (int j = 0; j <7; j++)
   {
     if (this->id[j] != id[j])
     {
@@ -103,7 +103,7 @@ bool Record::idcmp(const char *id) const
 
 bool Record::uhecmp(const char *UHE) const
 {
-  for (int j = 0; j < 2; j++)
+  for (int j = 0; j < 7; j++)
   {
     if (this->UHE[j] != UHE[j])
     {
@@ -115,8 +115,8 @@ bool Record::uhecmp(const char *UHE) const
 
 bool Record::idinrange(const char *idBegin, const char *idEnd) const
 {
-  char id[3];
-  memcpy(id,this->id,2);
+  char id[8];
+  memcpy(id,this->id,7);
 
   id[2]='\0';
   if (strcmp(id,idBegin)>=0 && strcmp(id,idEnd)<0)

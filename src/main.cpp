@@ -35,7 +35,7 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("25,1 ,1  ,2017-01-01,46.05");
+  db->ins("5000000,101,100,2017-01-01,46.05");
   db->flush();
   printBlocks(db);
 }
@@ -55,7 +55,7 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = " 1";
+  const char *id = "0000251";
   db->sel(id);
   printBlocks(db);
 }
@@ -63,11 +63,11 @@ void testSelect(DATA_STRUCT* db)
 void testSelectMultiple(DATA_STRUCT* db)
 {
   const char **ids = (const char **)malloc(55);
-  ids[0] = " 1";
-  ids[1] = " 2";
-  ids[2] = " 3";
-  ids[3] = " 4";
-  ids[4] = " 5";
+  ids[0] = "0000001";
+  ids[1] = "0000002";
+  ids[2] = "0000003";
+  ids[3] = "0000004";
+  ids[4] = "4000005";
   const std::vector<const Record *> records = db->selMultiple(ids, 5);
   for (int i = 0; i < records.size(); i++)
   {
@@ -78,8 +78,8 @@ void testSelectMultiple(DATA_STRUCT* db)
 
 void testSelectRange(DATA_STRUCT *db)
 {
-  const char *idBegin = " 1";
-  const char *idEnd = "10";
+  const char *idBegin = "0000001";
+  const char *idEnd = "0000010";
   const std::vector<const Record *> records = db->selRange(idBegin, idEnd);
   for (int i = 0; i < records.size(); i++)
   {
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-   initDb(&db);
+  initDb(&db);
 
   // Insert
   // testInsert(&db);
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
   // testSelectMultiple(&db);
 
   // Select range
-   testSelectRange(&db);
+  // testSelectRange(&db);
   // testSelectMultiUHE(&db);
 
   

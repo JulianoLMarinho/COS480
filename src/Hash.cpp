@@ -4,6 +4,7 @@
 #include <cstring>
 #include <functional>
 
+// using namespace std;
 #define HASH_DISK "Hash.cbd"
 
 Hash::Hash()
@@ -24,25 +25,31 @@ Hash::~Hash()
 void Hash::ins(const char *string)
 {
   const Record *record = new Record(string);
-  char id[2];
-  memcpy(id,record->id,2);
-  id[2]='\0';
+  char id[7];
+  memcpy(id,record->id,7);
+  id[7]='\0';
   std::string idString(id);
-  int hashPos = hashFunction(idString)/1000000000000000;
-
+  int idInt = std::stoi(idString);
+  int hashPos = idInt % 78125; //tamanho de record = 28
   // Retrieves file:
-  std::ofstream in(HASH_DISK, std::ifstream::ate | std::ifstream::in);
+  std::fstream in(HASH_DISK, std::ifstream::ate | std::ifstream::in);
   // Fill remainder of file with null:
-  while (in.tellp()< hashPos){
+  while (in.tellg()< hashPos + 28*64*hashPos){
 	  in <<  0x00;
   }
-
+  
   // Goes to writing postiion:
-  in.seekp(hashPos);
+  // char *s = new char[1000];
+  // in.read(s, 1000);
+  // cout<<s<<endl;
+  // delete [] s;
   // Writes to file:
-  in << *record;
+  in.seekg(hashPos + 28*64*hashPos);
 
-  std::cout<< "Inserted " << idString << " into position " << hashPos <<std::endl;
+  in << std::endl;
+  in << *record;
+  //in.close();
+  std::cout<< "Inserted " << idInt << " into position " << hashPos + 28*hashPos <<std::endl;
 }
 
 void Hash::flush()
