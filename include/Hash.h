@@ -1,4 +1,4 @@
-#include "Block.h"
+#include "BlockHash.h"
 #include "Header.h"
 #include "HeaderBucket.h"
 
@@ -12,8 +12,8 @@ private:
   std::hash<std::string> hashFunction;
 
 public:
-  Block *blockp;
-  Block *blockg;
+  BlockHash *blockp;
+  BlockHash *blockg;
   Hash();
   ~Hash();
   void ins(const char *string);
@@ -22,4 +22,5 @@ public:
   std::vector<const Record *>selRange(const char *cpfBegin, const char *cpfEnd);
   const Record *sel(const char *cpf, bool toDelete=false);
   void del(const char *cpf);
+  int getPositionByHash(int hash);
 };

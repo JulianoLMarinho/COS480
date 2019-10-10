@@ -11,8 +11,8 @@ Hash::Hash()
 {
   const std::string dataFilename = HASH_DISK;
   const std::string headerFilename = HASH_DISK "h";
-  this->blockp = new Block(dataFilename.c_str(), 'o'); // Initialize writing block
-  this->blockg = new Block(dataFilename.c_str(), 'r'); // Initialize reading block
+  this->blockp = new BlockHash(dataFilename.c_str(), 'o'); // Initialize writing block
+  this->blockg = new BlockHash(dataFilename.c_str(), 'r'); // Initialize reading block
   this->header = new Header(headerFilename);
 }
 
@@ -30,35 +30,39 @@ void Hash::ins(const char *string)
   id[7]='\0';
   std::string idString(id);
   int idInt = std::stoi(idString);
-  int hashPos = idInt % 10; //tamanho de record = 43
-  // Retrieves file:
+  int hashPos = idInt % 1000; //tamanho de record = 43
+   // Retrieves file:
   std::fstream in(HASH_DISK, std::fstream::ate | std::fstream::in | std::fstream::out);
   // Fill remainder of file with null:
-  int pos = hashPos + 1024*2*hashPos;
+  int pos = getPositionByHash(hashPos);
   while (in.tellg()< pos){
 	  in <<  ' ';
   }
-  
-
-
-
   // Goes to writing postiion:
   in.seekg(pos);
   in << std::endl;
-  char * headerBucket = new char [10];
-  in.read(headerBucket, 10);
+  char * headerBucket = new char [20];
+  in.read(headerBucket, 20);
   HeaderBucket *h = new HeaderBucket(headerBucket, pos + 1);
 
+  if(h->isFull()){
+    std::cout<<"O Bucket da posição "<<pos<<" está cheio. Record "<<*record<<" não inserido."<<std::endl;
+  } else {
+    in.seekg(h->getNextEmptyPosition(sizeof(Record)));
+    in << *record;
+    in.seekg(pos);
+    in << std::endl;
+    in << *h;
+  }
   
-  in.seekg(h->getNextEmptyPosition(sizeof(Record)));
-  in << *record;
-  in.seekg(pos);
-  in << std::endl;
-  in << *h;
-  std::cout<<h->getNextEmptyPosition()<<std::endl;
+  // std::cout<<h->getNextEmptyPosition()<<std::endl;
 
   delete [] headerBucket;
 
+}
+
+int Hash::getPositionByHash(int hash){
+  return hash + 20 + 1175*100*hash;
 }
 
 void Hash::flush()

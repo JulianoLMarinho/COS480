@@ -53,7 +53,7 @@ std::ostream &operator<<(std::ostream &out, const Record &r)
   print(out, r.Cenario, sizeof(r.Cenario));
   print(out, r.Estagio, sizeof(r.Estagio));
   print(out, r.Geracao, sizeof(r.Geracao), false);
-  return out<< std::endl; //pra hashtablefuncionar eu vou mudar isso pra não ter esse endl
+  return out;//pra hashtablefuncionar eu vou mudar isso pra não ter esse endl
 }
 
 bool Record::operator<(const Record &r) const
