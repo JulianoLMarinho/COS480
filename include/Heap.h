@@ -6,7 +6,7 @@
 class Heap
 {
 private:
-  uint64_t pos; // Reading block position in the file
+  uint64_t pos; // Reading block position in the file.
 
 public:
   Block *blockp;
