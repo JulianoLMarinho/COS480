@@ -17,6 +17,17 @@ HeaderBucket::HeaderBucket(const char *string, int position)
     }
 };
 
+HeaderBucket::HeaderBucket(std::string string, int position)
+{
+    try{
+        this->nextEmptyPos = stoi(string.substr(10, 10));
+        this->full = (this->nextEmptyPos + 20) - position > 29375 ? true : false;
+    } catch (...){
+        this->nextEmptyPos = position+20;
+        this->full = false;
+    }
+};
+
 int HeaderBucket::getNextEmptyPosition() 
 {
     // std::ostringstream ostr;

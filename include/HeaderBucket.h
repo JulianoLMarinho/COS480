@@ -10,6 +10,7 @@ private:
 
 public:
   HeaderBucket(const char *string, int position);
+  HeaderBucket(std::string headerBucket, int position);
   ~HeaderBucket();
 
   int getNextEmptyPosition();

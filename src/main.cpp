@@ -12,8 +12,8 @@ using namespace std;
 
 void printBlocks(DATA_STRUCT* db)
 {
-  cout << db->blockg->blocks_used << " read blocks used" << endl;
-  cout << db->blockp->blocks_used << " write blocks used" << endl;
+  // cout << db->blockg->blocks_used << " read blocks used" << endl;
+  // cout << db->blockp->blocks_used << " write blocks used" << endl;
 }
 
 void initDb(DATA_STRUCT* db)
@@ -55,37 +55,37 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "0000004";
+  const char *id = "0000099";
   db->sel(id);
-  printBlocks(db);
+  // printBlocks(db);
 }
 
 void testSelectMultiple(DATA_STRUCT* db)
 {
-  const char **ids = (const char **)malloc(55);
-  ids[0] = "0000001";
-  ids[1] = "0000002";
-  ids[2] = "0000003";
-  ids[3] = "0000004";
-  ids[4] = "0000005";
+  int ids[5];
+  ids[0] = 1;
+  ids[1] = 2;
+  ids[2] = 3;
+  ids[3] = 4;
+  ids[4] = 5;
   const std::vector<const Record *> records = db->selMultiple(ids, 5);
-  for (int i = 0; i < records.size(); i++)
-  {
-    cout << "Registro " << i << ": " << records[i][0] << endl;
-  }
-  printBlocks(db);
+  // for (int i = 0; i < records.size(); i++)
+  // {
+  //   cout << "Registro " << i << ": " << records[i][0] << endl;
+  // }
+  // printBlocks(db);
 }
 
 void testSelectRange(DATA_STRUCT *db)
 {
-  const char *idBegin = "0000001";
-  const char *idEnd = "0000010";
-  const std::vector<const Record *> records = db->selRange(idBegin, idEnd);
-  for (int i = 0; i < records.size(); i++)
-  {
-    cout << "Registro " << i << ": " << records[i][0] << endl;
-  }
-  printBlocks(db);
+  int idBegin = 1;
+  int idEnd = 1000;
+  db->selRange(idBegin, idEnd);
+  // for (int i = 0; i < records.size(); i++)
+  // {
+  //   cout << "Registro " << i << ": " << records[i][0] << endl;
+  // }
+  // printBlocks(db);
 }
 
 void testSelectMultiUHE(DATA_STRUCT *db)
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-  initDb(&db);
+  // initDb(&db);
 
   // Insert
   // testInsert(&db);
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
   // testSelect(&db);
 
   // Select multiple
-  // testSelectMultiple(&db);
+  testSelectMultiple(&db);
 
   // Select range
   // testSelectRange(&db);
@@ -141,4 +141,5 @@ int main(int argc, char **argv)
   //testSelect(&db);
 
   // testDelMultiUHE(&db);
+  return 1;
 }

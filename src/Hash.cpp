@@ -11,15 +11,11 @@ Hash::Hash()
 {
   const std::string dataFilename = HASH_DISK;
   const std::string headerFilename = HASH_DISK "h";
-  this->blockp = new BlockHash(dataFilename.c_str(), 'o'); // Initialize writing block
-  this->blockg = new BlockHash(dataFilename.c_str(), 'r'); // Initialize reading block
-  this->header = new Header(headerFilename);
 }
 
 Hash::~Hash()
 {
-  delete this->blockp;
-  delete this->blockg;
+
 }
 
 void Hash::ins(const char *string)
@@ -30,11 +26,11 @@ void Hash::ins(const char *string)
   id[7]='\0';
   std::string idString(id);
   int idInt = std::stoi(idString);
-  int hashPos = idInt % 1000; //tamanho de record = 43
+  //int hashPos = idInt % 10;//1000; //tamanho de record = 43
    // Retrieves file:
   std::fstream in(HASH_DISK, std::fstream::ate | std::fstream::in | std::fstream::out);
   // Fill remainder of file with null:
-  int pos = getPositionByHash(hashPos);
+  int pos = getPositionByHash(idInt);
   while (in.tellg()< pos){
 	  in <<  ' ';
   }
@@ -44,7 +40,7 @@ void Hash::ins(const char *string)
   char * headerBucket = new char [20];
   in.read(headerBucket, 20);
   HeaderBucket *h = new HeaderBucket(headerBucket, pos + 1);
-
+  Bucket *b = new Bucket(in, HASH_DISK, pos + 1, h);
   if(h->isFull()){
     std::cout<<"O Bucket da posição "<<pos<<" está cheio. Record "<<*record<<" não inserido."<<std::endl;
   } else {
@@ -61,104 +57,113 @@ void Hash::ins(const char *string)
 
 }
 
-int Hash::getPositionByHash(int hash){
-  return hash + 20 + 1175*100*hash;
+int Hash::getPositionByHash(int idInt){
+  int hashPos = idInt % 10;
+  return hashPos + 20 + 1175*100*hashPos;
 }
 
 void Hash::flush()
 {
-  this->blockp->persist();
+  // this->blockp->persist();
 }
 
-const Record *Hash::sel(const char *id, bool toDelete)
+const Record* Hash::sel(const char *id, bool toDelete)
 {
-  std::string cpfString(id);
-  this->pos = this->blockg->read(hashFunction(cpfString)/1000000000000000);
-  std::cout<<cpfString<<std::endl<<hashFunction(cpfString)/1000000000000000<<std::endl;
-  const Record *record;
-  for (int i = 0; i < this->blockg->count(); i++)
+  std::string idString(id);
+  int idInt = std::stoi(idString);
+  // int hashPos = idInt % 10;
+  return this->sel(idInt, toDelete);
+}
+
+const Record* Hash::sel(int id, bool toDelete)
+{
+  // int hashPos = idInt % 10;
+  int pos = getPositionByHash(id);
+  bool found = false;
+  std::fstream file(HASH_DISK, std::fstream::ate | std::fstream::in | std::fstream::out);
+  Bucket * bck = new Bucket(file, HASH_DISK, pos+1);
+  std::list<BlockHash>::iterator it;
+  for (it = bck->blocks.begin(); it != bck->blocks.end(); ++it)
   {
-    record = this->blockg->get(i);
-    bool found = 1;
-    for (int j = 0; j < sizeof(record->id); j++)
-    {
-      if (record->id[j] != id[j])
-      {
-        found = 0;
-        break;
+    std::list<Record>::iterator rec;
+    for (rec = it->recordList.begin(); rec != it->recordList.end(); ++rec){
+      rec->id[7]='\0';
+      std::string idStringTeste(rec->id);
+      if(rec->id[0] == '0' && std::stoi(idStringTeste) == id){
+        // std::cout<<"Found "<<*rec<<" "<<endl;
+        // std::cout<<bck->readBlocks<<" blocks were lidos"<<std::endl;
+        this->readBlocks += bck->readBlocks;
+        return &(*rec);
       }
     }
-    if (found)
-    {
-      if (toDelete)
-      {
-        // Replace the current register with 000's:
-        this->blockg->nullify(i, this->pos, HASH_DISK);
-        std::cout << "Deleted";
-      }
-      else
-      {
-        std::cout << "Found";
-      }
-      // Finishes printing:
-      std::cout << " record " << *record << " in block position " << this->pos << std::endl;
-      return record;
-    }
+    
+    // bool found = 1;
+    // for (int j = 0; j < sizeof(record->id); j++)
+    // {
+    //   if (record->id[j] != id[j])
+    //   {
+    //     found = 0;
+    //     break;
+    //   }
+    // }
+    // if (found)
+    // {
+    //   if (toDelete)
+    //   {
+    //     // Replace the current register with 000's:
+    //     this->blockg->nullify(i, this->pos, HASH_DISK);
+    //     std::cout << "Deleted";
+    //   }
+    //   else
+    //   {
+    //     std::cout << "Found";
+    //   }
+    //   // Finishes printing:
+    //   std::cout << " record " << *record << " in block position " << this->pos << std::endl;
+    //   return record;
+    // }
   }
-  std::cout << "No record with ID = " << id << std::endl;
   return nullptr;
 }
 
-std::vector<const Record *>Hash::selMultiple(const char **ids, const int quant)
+std::vector<const Record *>Hash::selMultiple(const int *ids, const int quant)
 {
-  const Record *record;
-  std::vector<const Record *>foundRecords;
+  std::vector<const Record *>t;
   int found = 0;
   for (int n = 0; n < quant; n++)
   {
-    std::string cpfString(ids[n]);
-    this->pos = this->blockg->read(hashFunction(cpfString)/1000000000000000);
-    for (int i = 0; i < this->blockg->count(); i++)
-    {
-      record = this->blockg->get(i);
-      if (record->idcmp(ids[n]))
-      {
-        foundRecords.push_back(record);
-        found++;
-        break;
+  const Record* rt = this->sel(ids[n], false);
+      if(rt!=nullptr){
+        t.push_back(rt);
       }
-    }
   }
+  std::vector<const Record *>::iterator it;
 
-  if(found > 0){
-    std::cout << "All records found " << std::endl;
-    return foundRecords;
+  for(it=t.begin(); it != t.end(); ++it){
+    std::cout<<**it<<std::endl;
   }
+  std::cout<<t.size()<<" Records were found"<<std::endl;
+  std::cout<<this->readBlocks<<" read blocks"<<std::endl;
+  return t;
 }
 
-std::vector<const Record *>Hash::selRange(const char *idBegin, const char *idEnd)
+std::vector<const Record *>Hash::selRange(int begin, int end)
 {
-  this->pos = this->blockg->read(0);
-  const Record *record;
-  std::vector<const Record *>foundRecords;
-  int found = 0;
-  do
-  {
-    for (int i = 0; i < this->blockg->count(); i++)
-    {
-      record = this->blockg->get(i);
-      for (int j = 0; j < sizeof(record->id); j++)
-      {
-        if (record->idinrange(idBegin, idEnd))
-        {
-          foundRecords.push_back(record);
-          found++;
-          break;
-        }
+  std::vector<const Record *> t;
+  for(int i = begin; i<=end; i++){
+    const Record* rt = this->sel(i, false);
+      if(rt!=nullptr){
+        t.push_back(rt);
       }
-    }
-  } while ((this->pos = this->blockg->read(this->pos)) > 0);
-  return foundRecords;
+  }
+  std::vector<const Record *>::iterator it;
+
+  for(it=t.begin(); it != t.end(); ++it){
+    std::cout<<**it<<std::endl;
+  }
+  std::cout<<t.size()<<" Records were found"<<std::endl;
+  std::cout<<this->readBlocks<<" read blocks"<<std::endl;
+  return t;
 }
 
 void Hash::del(const char *id)

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ostream>
 #include <list>
 #include <iterator>
 #include "BlockHash.h"
@@ -9,13 +10,20 @@ using namespace std;
 class Bucket
 {
 private:
-    list<BlockHash>blocks;
-    HeaderBucket headerBucket;
+    HeaderBucket * headerBucket;
+    
 
 public:
-    Bucket(int position);
+    std::list<BlockHash> blocks;
+    int readBlocks = 0;
+    int writeBlocks = 0;
+    Bucket();
+    Bucket(const char *filename, int position);
+    Bucket(std::fstream &file, const char *filename, int position);
+    Bucket(std::fstream &file, const char *filename, int position, HeaderBucket *header);
     ~Bucket();
 
-    friend ostream &operator<<(ostream &out, Bucket &hb);
+    void write(BlockHash *bh);
+    friend std::ostream &operator<<(std::ostream &out, Bucket &hb);
 
 };
