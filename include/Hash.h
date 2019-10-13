@@ -23,4 +23,5 @@ public:
   const Record* sel(int id, bool toDelete=false);
   void del(const char *cpf);
   int getPositionByHash(int hash);
+  void initDb();
 };

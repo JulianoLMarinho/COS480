@@ -6,6 +6,9 @@
 
 // using namespace std;
 #define HASH_DISK "Hash.cbd"
+#define BUCKET_NUMBERS 10
+#define BLOCK_SIZE 1175
+#define BLOCK_NUMBER 100
 
 Hash::Hash()
 {
@@ -40,7 +43,7 @@ void Hash::ins(const char *string)
   char * headerBucket = new char [20];
   in.read(headerBucket, 20);
   HeaderBucket *h = new HeaderBucket(headerBucket, pos + 1);
-  Bucket *b = new Bucket(in, HASH_DISK, pos + 1, h);
+  //Bucket *b = new Bucket(in, HASH_DISK, pos + 1, h);
   if(h->isFull()){
     std::cout<<"O Bucket da posição "<<pos<<" está cheio. Record "<<*record<<" não inserido."<<std::endl;
   } else {
@@ -54,12 +57,13 @@ void Hash::ins(const char *string)
   // std::cout<<h->getNextEmptyPosition()<<std::endl;
 
   delete [] headerBucket;
+  in.close();
 
 }
 
 int Hash::getPositionByHash(int idInt){
-  int hashPos = idInt % 10;
-  return hashPos + 20 + 1175*100*hashPos;
+  int hashPos = idInt % BUCKET_NUMBERS;
+  return hashPos + 20 + BLOCK_SIZE*BLOCK_NUMBER*hashPos;
 }
 
 void Hash::flush()
@@ -170,4 +174,13 @@ void Hash::del(const char *id)
 {
   // Seek and destroy:oloo
   Hash::sel(id, true);
+}
+
+void Hash::initDb(){
+  int j = (BLOCK_NUMBER*BLOCK_SIZE+20)*BUCKET_NUMBERS;
+  std::fstream in(HASH_DISK);
+  for(int i = 0; i<9999999; i++){
+    in<<' ';
+  }
+  in.close();
 }

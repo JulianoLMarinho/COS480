@@ -21,6 +21,7 @@ void initDb(DATA_STRUCT* db)
   string line;
   ifstream infile("../Data/FixedSize_gh.csv");
   getline(infile, line);
+  db->initDb();
   if (infile.is_open())
   {
     while (getline(infile, line))
@@ -55,7 +56,7 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "0000099";
+  const char *id = "0000001";
   db->sel(id);
   // printBlocks(db);
 }
@@ -125,10 +126,10 @@ int main(int argc, char **argv)
   // testInsertMult(&db);
 
   // Select
-  // testSelect(&db);
+   testSelect(&db);
 
   // Select multiple
-  testSelectMultiple(&db);
+   testSelectMultiple(&db);
 
   // Select range
   // testSelectRange(&db);
