@@ -19,6 +19,8 @@ public:
   char Cenario[3], Estagio[10];
   char Geracao[20];
 
+  const static int EXTRA_CHARACTERS_PER_LINE = 5;
+
   Record(const char string[]);
   bool idcmp(const char *id) const;
   bool uhecmp(const char *uhe) const;

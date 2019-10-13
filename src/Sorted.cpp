@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <list>
+#include <math.h>
 
 #define SORTED_DISK "Sorted.cbd"
 
@@ -44,6 +45,13 @@ void Sorted::ins(const char *string)
   this->sorted = false;
 }
 
+void Sorted::insMulti(const char **string, const int quant)
+{
+  for (int i = 0; i < quant; i++){
+    ins(string[i]);
+  }
+}
+
 const Record *Sorted::sel(const char *id, bool toDelete)
 {
   if (!this->sorted) {
@@ -51,30 +59,14 @@ const Record *Sorted::sel(const char *id, bool toDelete)
     this->sorted = true;
   }
   int64_t start = 0;
-  int64_t end = this->blockg->blocks_used * Block::MAX_SIZE;
+  int64_t end = this->blockg->recordsInFile(SORTED_DISK)-1;
   const Record *record;
   do
   {
-    this->pos = this->blockg->read((start + end) / 2);
-    record = this->blockg->get(0); //checks if first record is larger
-    bool found = 1;
-    bool searchAgain = 0;
-    for (int j = 0; j < sizeof(record->id); j++)
-    {
-      if (record->id[j] != id[j])
-      {
-        found = 0;
-        break;
-      }
-      if (record->id[j] > id[j])
-      {
-        end = this->pos;
-        searchAgain = 1;
-        break;
-      }
-    }
-    if (found)
-    {
+    int64_t middle = ceil(((end - start) / 2))+start;
+    this->pos = this->blockg->read(Block::convertRecordPos2FilePos(middle));
+    record = this->blockg->get(0);
+    if(record->idcmp(id)){
       if (toDelete){
         // Replace the current register with 000's:
         this->blockg->nullify(0, this->pos, SORTED_DISK);
@@ -84,82 +76,23 @@ const Record *Sorted::sel(const char *id, bool toDelete)
         std::cout<<"Found";
       }
       // Finishes printing:
-      std::cout << " record " << *record << " in block position " << 0 << std::endl;
+      std::cout << " record " << *record << " in block position " << 0 << " line " << middle+1 << std::endl;
       return record;
     }
-    else
-    {
-      if (searchAgain)
-      {
-        continue;
-      }
-    }
-    record = this->blockg->get(this->blockg->count() - 1); // Checks if last record is smaller
-    found = 1;
-    searchAgain = 0;
     for (int j = 0; j < sizeof(record->id); j++)
     {
-      if (record->id[j] != id[j])
+      if (record->id[j] > id[j])
       {
-        found = 0;
+        end = middle;
         break;
       }
       if (record->id[j] < id[j])
       {
-        start = this->pos;
-        searchAgain = 1;
+        start = middle+1;
         break;
       }
     }
-    if (found)
-    {
-      if (toDelete){
-        // Replace the current register with 000's:
-        this->blockg->nullify(this->blockg->count() - 1, this->pos, SORTED_DISK);
-        std::cout << "Deleted";
-      }
-      else{
-        std::cout<<"Found";
-      }
-      // Finishes printing:
-      std::cout << " record " << *record << " in block position " << this->blockg->count() - 1 << std::endl;
-      return record;
-    }
-    else
-    {
-      if (searchAgain)
-      {
-        continue;
-      }
-    }
-    for (int i = 1; i < this->blockg->count() - 1; i++)
-    { //check other records
-      record = this->blockg->get(i);
-      found = 1;
-      for (int j = 0; j < sizeof(record->id); j++)
-      {
-        if (record->id[j] != id[j])
-        {
-          found = 0;
-          break;
-        }
-      }
-      if (found)
-      {
-      if (toDelete){
-        // Replace the current register with 000's:
-        this->blockg->nullify(i, this->pos, SORTED_DISK);
-        std::cout << "Deleted";
-      }
-      else{
-        std::cout<<"Found";
-      }
-      // Finishes printing:
-      std::cout << " record " << *record << " in block position " << i << std::endl;
-      return record;
-      }
-    }
-  } while ((start + end) / 2 != this->pos);
+  } while (start != end);
   std::cout << "No record with id = " << id << std::endl;
   return nullptr;
 }

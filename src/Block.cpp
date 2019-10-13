@@ -1,5 +1,5 @@
 #include "Block.h"
-
+#include <math.h>
 
 Block::Block(const char *filename, const char mode)
 {
@@ -62,7 +62,20 @@ int Block::read(const uint64_t pos)
   this->blocks_used++;
   // std::cout << "Pos = " << pos << std::endl;
   this->reset();
-  this->file.seekg(pos);
+  
+  this->file.clear();
+  // pos might be middle of line
+  // this code makes it go to beginning of line
+  uint64_t position = pos;
+  this->file.seekg(position);
+  if(position != 0){ // doesnt go back if at the beginning of file 
+    while(this->file.peek() != '\n'){
+      position = position-1;
+      this->file.seekg(position);
+    };
+    this->file.seekg(position+1);
+  }
+
   std::string line;
   // std::cout << "for i to " << (Block::MAX_SIZE / sizeof(Record)) << std::endl;
   for (uint32_t i = 0; i < (Block::MAX_SIZE / sizeof(Record)); i++)
@@ -129,3 +142,16 @@ void Block::nullify(int reg, int pos, const char* path){
         zeroFile.flush();
     }
 }
+
+int64_t Block::recordsInFile(const char* filename)
+{
+  std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+  int64_t fileSize = in.tellg();
+  return fileSize/(sizeof(Record)+Record::EXTRA_CHARACTERS_PER_LINE); 
+}
+
+int64_t Block::convertRecordPos2FilePos(int64_t recordPos)
+{
+  return recordPos*(sizeof(Record)+Record::EXTRA_CHARACTERS_PER_LINE);
+}
+
