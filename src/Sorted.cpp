@@ -166,7 +166,6 @@ std::vector<const Record *>Sorted::selMultipleUHE(const char *uhe, bool toDelete
   do
   {
     int t = this->blockg->read(this->pos);
-    this->pos = t == -1 ? 0 : t;
 
     for (int i = 0; i < this->blockg->count(); i++)
     {
@@ -185,10 +184,17 @@ std::vector<const Record *>Sorted::selMultipleUHE(const char *uhe, bool toDelete
         }
       }
     }
+    this->pos = t == -1 ? 0 : t;
   } while (this->pos > 0);
   if (found > 0)
     std::cout << found << " records found " << std::endl;
   else
     std::cout << "Not all records found " << std::endl;
   return foundRecords;
+}
+
+void Sorted::delMultiUHE(const char *uhe)
+{
+  // Seek and destroy:
+  Sorted::selMultipleUHE(uhe, true);
 }

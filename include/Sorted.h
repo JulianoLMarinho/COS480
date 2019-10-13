@@ -26,6 +26,7 @@ public:
   std::vector<const Record *>selMultipleUHE(const char *uhe, bool toDelete=false);
   std::vector<const Record *>selRange(const char *cpfBegin, const char *cpfEnd);
   void del(const char *cpf);
+  void delMultiUHE(const char *uhe);
 
   void sort();
 };
