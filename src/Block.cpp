@@ -125,7 +125,7 @@ void Block::reset()
 // Replaces register in registers[reg] with a bunch of 000's. Then writes to file in pos +- offset:
 void Block::nullify(int reg, int pos, const char* path){
     // This is the null register that will replace the one we will delete:
-    const char allZeroChar[] = "00,00,000,0000-00-00,11111111111111";
+    const char allZeroChar[] = "0000000,000,000,0000-00-00,11111111111111111111";
     Record *record = new Record(allZeroChar);
     std::cout<<*record->Estagio<<std::endl;
     delete (this->records[reg]);  // Frees space occupied by old record

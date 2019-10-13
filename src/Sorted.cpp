@@ -69,7 +69,7 @@ const Record *Sorted::sel(const char *id, bool toDelete)
     if(record->idcmp(id)){
       if (toDelete){
         // Replace the current register with 000's:
-        this->blockg->nullify(0, this->pos, SORTED_DISK);
+        this->blockg->nullify(0, Block::convertRecordPos2FilePos(middle), SORTED_DISK);
         std::cout << "Deleted";
       }
       else{
