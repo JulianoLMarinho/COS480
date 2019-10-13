@@ -90,7 +90,7 @@ void testSelectRange(DATA_STRUCT *db)
 
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
-  const std::vector<const Record *> records = db->selMultipleUHE(" 1");
+  const std::vector<const Record *> records = db->selMultipleUHE("001");
   for (int i = 0; i < records.size(); i++)
   {
     cout << "Registro " << i << ": " << records[i][0] << endl;
