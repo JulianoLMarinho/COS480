@@ -23,6 +23,7 @@ public:
   void insMulti(const char **record, const int quant);
   const Record *sel(const char *cpf, bool toDelete=false);
   std::vector<const Record *>selMultiple(const char **cpfs, const int quant);
+  std::vector<const Record *>selMultipleUHE(const char *uhe, bool toDelete=false);
   std::vector<const Record *>selRange(const char *cpfBegin, const char *cpfEnd);
   void del(const char *cpf);
 

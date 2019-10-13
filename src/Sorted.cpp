@@ -156,3 +156,39 @@ void Sorted::sort() {
     sortedOutputFile << *it;
   }
 }
+
+std::vector<const Record *>Sorted::selMultipleUHE(const char *uhe, bool toDelete)
+{
+  this->pos = 0;
+  const Record *record;
+  std::vector<const Record *>foundRecords;
+  int found = 0;
+  do
+  {
+    int t = this->blockg->read(this->pos);
+    this->pos = t == -1 ? 0 : t;
+
+    for (int i = 0; i < this->blockg->count(); i++)
+    {
+      record = this->blockg->get(i);
+      if(record->uhecmp(uhe))
+      {
+        foundRecords.push_back(record);
+        found++;
+        
+        if (toDelete)
+        {
+          std::cout << " record " << *record << " in block position " << i << std::endl;
+          // Replace the current register with 000's:
+          this->blockg->nullify(i, this->pos, SORTED_DISK);
+          std::cout << "Deleted" << std::endl;
+        }
+      }
+    }
+  } while (this->pos > 0);
+  if (found > 0)
+    std::cout << found << " records found " << std::endl;
+  else
+    std::cout << "Not all records found " << std::endl;
+  return foundRecords;
+}
