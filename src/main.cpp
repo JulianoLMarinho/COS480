@@ -118,11 +118,11 @@ int main(int argc, char **argv)
   DATA_STRUCT db;
 
   // Init database
-  // initDb(&db);
+  initDb(&db);
 
   // Insert
-  // testInsert(&db);
-  // testInsertMult(&db);
+  testInsert(&db);
+  testInsertMult(&db);
 
   // Select
   // testSelect(&db);
@@ -140,5 +140,5 @@ int main(int argc, char **argv)
   //testDelete(&db);
   //testSelect(&db);
 
-  testDelMultiUHE(&db);
+  // testDelMultiUHE(&db);
 }

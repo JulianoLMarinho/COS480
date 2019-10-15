@@ -17,7 +17,8 @@ private:
 public:
   char UHE[3], id[7]; //ALTERAR DE ACORDO COM O TAMANHO  DO ID NO
   char Cenario[3], Estagio[10];
-  char Geracao[20];
+  // char Geracao[20];
+  char Geracao[];
 
   Record(const char string[]);
   bool idcmp(const char *id) const;

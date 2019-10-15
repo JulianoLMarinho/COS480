@@ -42,7 +42,7 @@ Record::Record(const char *string)
   idx += sizeof(this->Estagio) + 1;
   // cout<<"Estagio = "<<this->Estagio<<endl;
 
-  memcpy(this->Geracao, string + idx, sizeof(this->Geracao));
+  // memcpy(this->Geracao, string + idx, sizeof(this->Geracao));
   // std::cout<<"Geracao = "<<this->Geracao<<std::endl;
 }
 
@@ -52,7 +52,7 @@ std::ostream &operator<<(std::ostream &out, const Record &r)
   print(out, r.UHE, sizeof(r.UHE));
   print(out, r.Cenario, sizeof(r.Cenario));
   print(out, r.Estagio, sizeof(r.Estagio));
-  print(out, r.Geracao, sizeof(r.Geracao), false);
+  // print(out, r.Geracao, sizeof(r.Geracao), false);
   return out << std::endl;
 }
 
