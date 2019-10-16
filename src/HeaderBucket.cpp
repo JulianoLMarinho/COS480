@@ -10,7 +10,7 @@ HeaderBucket::HeaderBucket(const char *string, int position)
     std::string nextPosString(string, 20);
     try{
         this->nextEmptyPos = stoi(nextPosString.substr(10, 10));
-        this->full = (this->nextEmptyPos + 20) - position > 29375 ? true : false;
+        this->full = (this->nextEmptyPos + 20) - position > 117490 ? true : false;
     } catch (...){
         this->nextEmptyPos = position+20;
         this->full = false;
@@ -21,7 +21,7 @@ HeaderBucket::HeaderBucket(std::string string, int position)
 {
     try{
         this->nextEmptyPos = stoi(string.substr(10, 10));
-        this->full = (this->nextEmptyPos + 20) - position > 29375 ? true : false;
+        this->full = (this->nextEmptyPos + 20) - position > 117490 ? true : false;
     } catch (...){
         this->nextEmptyPos = position+20;
         this->full = false;

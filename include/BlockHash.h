@@ -36,4 +36,7 @@ public:
   int read(const int offset); // Populate the block with N records starting from offset
   void nullify(int reg, int pos, const char* path); // Replaces register in registers[reg] with a bunch of 000's. Then writes to file in pos +- offset
   void persist(const int pos=-1); // Write this in disk file and reset this
+  
+  friend std::ostream &operator<<(std::ostream &out, BlockHash &hb);
+
 };

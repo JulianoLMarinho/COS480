@@ -24,6 +24,8 @@ public:
     ~Bucket();
 
     void write(BlockHash *bh);
+    void insertRecord(const Record *r);
+    void persist(std::fstream &file, int position);
     friend std::ostream &operator<<(std::ostream &out, Bucket &hb);
 
 };

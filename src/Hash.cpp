@@ -6,7 +6,7 @@
 
 // using namespace std;
 #define HASH_DISK "Hash.cbd"
-#define BUCKET_NUMBERS 10
+#define BUCKET_NUMBERS 100
 #define BLOCK_SIZE 1175
 #define BLOCK_NUMBER 100
 
@@ -52,10 +52,13 @@ void Hash::ins(const char *string)
     in.seekg(pos);
     in << std::endl;
     in << *h;
+    //b->insertRecord(record);
   }
-  
+  // in.seekg(pos);
+  // in<<endl;
+  // in<<"teste";
   // std::cout<<h->getNextEmptyPosition()<<std::endl;
-
+  // b->persist(in, pos);
   delete [] headerBucket;
   in.close();
 
@@ -93,9 +96,9 @@ const Record* Hash::sel(int id, bool toDelete)
     for (rec = it->recordList.begin(); rec != it->recordList.end(); ++rec){
       rec->id[7]='\0';
       std::string idStringTeste(rec->id);
-      if(rec->id[0] == '0' && std::stoi(idStringTeste) == id){
+      if(std::stoi(idStringTeste) == id){
         // std::cout<<"Found "<<*rec<<" "<<endl;
-        // std::cout<<bck->readBlocks<<" blocks were lidos"<<std::endl;
+        std::cout<<bck->readBlocks<<" blocks were lidos"<<std::endl;
         this->readBlocks += bck->readBlocks;
         return &(*rec);
       }

@@ -107,3 +107,12 @@ void BlockHash::t(BlockHash& other)
 {
   other.recordList = this->recordList;
 }
+
+
+std::ostream &operator<<(std::ostream &out, BlockHash &hb){
+  std::list<Record>::iterator rc;
+  for(rc = hb.recordList.begin(); rc != hb.recordList.end(); ++rc){
+    out<<*rc;
+  }
+}
+

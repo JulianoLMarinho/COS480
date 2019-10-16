@@ -56,8 +56,8 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "0000001";
-  db->sel(id);
+  const char *id = "0000086";
+  std::cout<<*db->sel(id)<<std::endl;;
   // printBlocks(db);
 }
 
@@ -126,10 +126,10 @@ int main(int argc, char **argv)
   // testInsertMult(&db);
 
   // Select
-   testSelect(&db);
+  testSelect(&db);
 
   // Select multiple
-   testSelectMultiple(&db);
+  // testSelectMultiple(&db);
 
   // Select range
   // testSelectRange(&db);
