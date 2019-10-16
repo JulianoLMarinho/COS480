@@ -9,11 +9,6 @@ class Record
 {
 private:
   size_t csvcpy(char *dst, const char *src, size_t start, size_t sz);
-// //UHE,Cenário,Estágio,Geração
-// this->schema.addColumn(Column("UHE",          "CHAR"));
-//     this->schema.addColumn(Column("Cenario",      "CHAR",   3));
-//     this->schema.addColumn(Column("Estagio",      "CHAR",   10));
-//     this->schema.addColumn(Column("Geracao",      "FLOAT"));
 public:
   char UHE[3], id[7]; //ALTERAR DE ACORDO COM O TAMANHO  DO ID NO
   char Cenario[3], Estagio[10];

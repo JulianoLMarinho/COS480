@@ -19,7 +19,7 @@ void printBlocks(DATA_STRUCT* db)
 void initDb(DATA_STRUCT* db)
 {
   string line;
-  ifstream infile("../Data/FixedSize_csvreduzido.csv");
+  ifstream infile("../Data/VariableSize_gh.csv");
   getline(infile, line);
   if (infile.is_open())
   {
@@ -55,7 +55,7 @@ void testInsertMult(DATA_STRUCT* db)
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "0000004";
+  const char *id = "0000025";
   db->sel(id);
   printBlocks(db);
 }
@@ -121,8 +121,8 @@ int main(int argc, char **argv)
   initDb(&db);
 
   // Insert
-  testInsert(&db);
-  testInsertMult(&db);
+  // testInsert(&db);
+  // testInsertMult(&db);
 
   // Select
   // testSelect(&db);

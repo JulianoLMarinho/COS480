@@ -43,6 +43,7 @@ Record::Record(const char *string)
   // cout<<"Estagio = "<<this->Estagio<<endl;
 
   // memcpy(this->Geracao, string + idx, sizeof(this->Geracao));
+  // memcpy(this->Geracao, string + idx, sizeof(string)-idx-1 );
   // std::cout<<"Geracao = "<<this->Geracao<<std::endl;
 }
 
