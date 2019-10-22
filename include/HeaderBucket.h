@@ -15,6 +15,7 @@ public:
 
   int getNextEmptyPosition();
   int getNextEmptyPosition(int insertedObject);
+  void removeElement(int sizeElement);
   int isFull();
   friend std::ostream &operator<<(std::ostream &out, HeaderBucket &hb);
 };

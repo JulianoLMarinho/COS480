@@ -49,20 +49,24 @@ Bucket::Bucket(std::fstream &file, const char *filename, int position)
     // 100 blocks in a bucket
     int blockSize = 1175;
     for (int i = 0; i < 100; i++){
-        string bt = line.substr(blockSize*i+20, blockSize*(i+1)+20);
-        if(blockSize*i+position > this->headerBucket->getNextEmptyPosition()){
-            break;
-        }
-        BlockHash *block = new BlockHash();
-        this->readBlocks++;
-        for (int j = 0; j < 25; j++){
-            string l = bt.substr(j*47, (j+1)*47);
-            char recChar[l.length() +1 ];
-            strcpy(recChar, l.c_str());
-            Record *rec = new Record(recChar);
-            block->write(rec);
-        };
-        this->blocks.push_back(*block);      
+        if(line.size() > 0 && line.find_first_not_of(' ') != std::string::npos){
+            string bt = line.substr(blockSize*i+20, blockSize*(i+1)+20);
+            if(blockSize*i+position > this->headerBucket->getNextEmptyPosition()){
+                break;
+            }
+            BlockHash *block = new BlockHash();
+            this->readBlocks++;
+            for (int j = 0; j < 25; j++){
+                string l = bt.substr(j*47, (j+1)*47);
+                if(!(l.find_first_not_of(' ') == std::string::npos)){
+                        char recChar[l.length() +1 ];
+                        strcpy(recChar, l.c_str());
+                        Record *rec = new Record(recChar);
+                        block->write(rec);
+                }    
+            };
+            this->blocks.push_back(*block);  
+        }    
     }
 };//323 405-9939
 
@@ -129,6 +133,7 @@ void Bucket::persist(std::fstream &file, int pos){
     file.seekg(pos);
     file<<endl;
     file<<*this->headerBucket;
+    this->writeBlocks = 0;
     // file<<"0000001,001,001,2017-01-01,000000000000000046.0";
     // file.fill(' ');
     // file.setf(std::ios_base::internal, std::ios_base::adjustfield);
@@ -136,6 +141,7 @@ void Bucket::persist(std::fstream &file, int pos){
 
     std::list<BlockHash>::iterator bh;
     for(bh = this->blocks.begin(); bh != this->blocks.end(); ++bh){
+        this->writeBlocks++;
         file<<*bh;
     }
 }

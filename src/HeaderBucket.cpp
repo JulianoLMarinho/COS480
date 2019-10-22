@@ -46,6 +46,11 @@ int HeaderBucket::getNextEmptyPosition(int insertedObject)
     return oldPos;
 }
 
+void HeaderBucket::removeElement(int sizeElement)
+{
+    this->nextEmptyPos = this->nextEmptyPos - sizeElement - 4;
+}
+
 std::ostream &operator<<(std::ostream &out, HeaderBucket &hb)
 {
     out << hb.isFull();

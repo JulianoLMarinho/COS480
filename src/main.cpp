@@ -36,81 +36,88 @@ void initDb(DATA_STRUCT* db)
 
 void testInsert(DATA_STRUCT* db)
 {
-  db->ins("0000025,001,001,2017-01-01,00000000000000046.05");
+  db->ins("5000000,001,001,2017-01-01,00000000000000046.05");
   db->flush();
-  printBlocks(db);
+  db->printBlocks();
 }
 
 void testInsertMult(DATA_STRUCT* db)
 {
   const char **ids = (const char **)malloc(55);
-  ids[0] = "0000020,001,001,2017-01-01,00000000000000046.05";
-  ids[1] = "0000021,001,001,2017-01-01,00000000000000046.05";
-  ids[2] = "0000022,001,001,2017-01-01,00000000000000046.05";
-  ids[3] = "0000023,001,001,2017-01-01,00000000000000046.05";
-  ids[4] = "0000024,001,001,2017-01-01,00000000000000046.05";
-  //db->insMulti(ids, 5);
+  ids[0] = "5000002,001,001,2017-01-01,00000000000000046.05";
+  ids[1] = "5000003,001,001,2017-01-01,00000000000000046.05";
+  ids[2] = "5000004,001,001,2017-01-01,00000000000000046.05";
+  ids[3] = "5000005,001,001,2017-01-01,00000000000000046.05";
+  ids[4] = "5000006,001,001,2017-01-01,00000000000000046.05";
+  db->insMulti(ids, 5);
   db->flush();
-  printBlocks(db);
+  db->printBlocks();
 }
 
 void testSelect(DATA_STRUCT* db)
 {
-  const char *id = "0000086";
+  const char *id = "0001254";
   std::cout<<*db->sel(id)<<std::endl;;
-  // printBlocks(db);
+  db->printBlocks();
 }
 
 void testSelectMultiple(DATA_STRUCT* db)
 {
   int ids[5];
   ids[0] = 1;
-  ids[1] = 2;
-  ids[2] = 3;
-  ids[3] = 4;
-  ids[4] = 5;
+  ids[1] = 542;
+  ids[2] = 1230;
+  ids[3] = 88;
+  ids[4] = 52000;
   const std::vector<const Record *> records = db->selMultiple(ids, 5);
-  // for (int i = 0; i < records.size(); i++)
-  // {
-  //   cout << "Registro " << i << ": " << records[i][0] << endl;
-  // }
-  // printBlocks(db);
+  for (int i = 0; i < records.size(); i++)
+  {
+    cout << "Registro " << i << ": " << records[i][0] << endl;
+  }
+  db->printBlocks();
 }
 
 void testSelectRange(DATA_STRUCT *db)
 {
   int idBegin = 1;
   int idEnd = 1000;
-  db->selRange(idBegin, idEnd);
-  // for (int i = 0; i < records.size(); i++)
-  // {
-  //   cout << "Registro " << i << ": " << records[i][0] << endl;
-  // }
-  // printBlocks(db);
+  const std::vector<const Record *> records = db->selRange(idBegin, idEnd);
+  for (int i = 0; i < records.size(); i++)
+  {
+    cout << "Registro " << i << ": " << records[i][0] << endl;
+  }
+  db->printBlocks();
 }
 
 void testSelectMultiUHE(DATA_STRUCT *db)
 {
-  //const std::vector<const Record *> records = db->selMultipleUHE(" 1");
-  // for (int i = 0; i < records.size(); i++)
-  // {
-  //   cout << "Registro " << i << ": " << records[i][0] << endl;
-  // }
-  // printBlocks(db);
+  const std::vector<const Record *> records = db->selUHE(1, 0, false);
+  for (int i = 0; i < records.size(); i++)
+  {
+    cout << "Registro " << i << ": " << records[i][0] << endl;
+  }
+  db->printBlocks();
 }
 
 void testDelMultiUHE(DATA_STRUCT *db)
 {
-  const char *uhe = "001";
-  //db->delMultiUHE(uhe);
-  printBlocks(db);
+  int uhe = 1;
+  db->delUHE(uhe);
+  db->printBlocks();
 }
 
 void testDelete(DATA_STRUCT *db)
 {
-  const char *id = "0000020";
+  const char *id = "0045202";
   db->del(id);
-  printBlocks(db);
+  db->printBlocks();
+}
+
+void testDeleteUHE(DATA_STRUCT *db)
+{
+  int uhe = 1;
+  db->delUHE(uhe);
+  db->printBlocks();
 }
 
 int main(int argc, char **argv)
@@ -122,11 +129,13 @@ int main(int argc, char **argv)
   // initDb(&db);
 
   // Insert
+  // std::cout<<"Teste inserção de 1 registro"<<std::endl;
   // testInsert(&db);
+
   // testInsertMult(&db);
 
   // Select
-  testSelect(&db);
+  // testSelect(&db);
 
   // Select multiple
   // testSelectMultiple(&db);
@@ -138,9 +147,10 @@ int main(int argc, char **argv)
   
 
   // Delete
-  //testDelete(&db);
-  //testSelect(&db);
+  // testDeleteUHE(&db);
+  // testDelete(&db);
+  // testSelect(&db);
 
-  // testDelMultiUHE(&db);
+  testDelMultiUHE(&db);
   return 1;
 }

@@ -10,10 +10,11 @@ using namespace std;
 class Bucket
 {
 private:
-    HeaderBucket * headerBucket;
+    
     
 
 public:
+    HeaderBucket * headerBucket;
     std::list<BlockHash> blocks;
     int readBlocks = 0;
     int writeBlocks = 0;
